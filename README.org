@@ -2,7 +2,52 @@
 
 * Description
 
-Virtual turing machine.
+Turing machine simulator.
+
+* Turing Machines
+
+I will use the abbreviation TM to refer to Turing machines in this section.
+
+** Defining a Turing Machine
+
+A TM is defined by its...
+
+- Input alphabet: Σ
+- Tape alphabet: Γ
+- Set of states: Q
+- Transition table: δ: Q x Γ x -> Q x Γ x {L, R}
+
+Where {L, R} represents the direction which the head should move along the tape.
+
+** Turing Machine Computations
+
+*** Configurations
+
+TM computations can be viewed as a sequence of configurations, where a
+configuration is a snapshot of the TM's state: it's head position and tape
+content.
+
+*** Programs
+
+TM programs are defined by the TM's transition table. Inputs to the program are
+written on a tape, the tape is fed into the TM, and the transition table
+determines the sequence of configurations which compose the computation.
+
+* Instructions
+
+** Writing Programs
+
+*** Transition Rule Format
+
+#+begin_src
+CURRENT_STATE READ_SYMBOL -> NEW_STATE WRITE_SYMBOL MOVE_DIRECTION
+#+end_src
+
+** Running Programs
+
+* Dependencies
+
+- Chicken Scheme
 
 * License
 
