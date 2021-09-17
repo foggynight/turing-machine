@@ -4,7 +4,7 @@
         (chicken string))
 
 ;; Transition rule accessor functions.
-(define (last-state rule) (list-ref rule 0))
+(define (current-state rule) (list-ref rule 0))
 (define (read-symbol rule) (list-ref rule 1))
 (define (new-state rule) (list-ref rule 3))
 (define (write-symbol rule) (list-ref rule 4))
@@ -13,7 +13,7 @@
 ;; Parse a transition rule from a string.
 (define (parse-transition-rule str)
   (let ((lst (string-split str)))
-    (list (last-state lst)
+    (list (current-state lst)
           (read-symbol lst)
           (new-state lst)
           (write-symbol lst)
