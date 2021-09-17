@@ -40,7 +40,7 @@ determines the sequence of configurations which compose the computation.
 *** Transition Rule Format
 
 #+begin_src
-CURRENT_STATE READ_SYMBOL -> NEW_STATE WRITE_SYMBOL MOVE_DIRECTION
+CURRENT_STATE READ_SYMBOL -> NEXT_STATE WRITE_SYMBOL MOVE_DIRECTION
 #+end_src
 
 ** Running Programs

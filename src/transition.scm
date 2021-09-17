@@ -6,7 +6,7 @@
 ;; Transition rule accessor functions.
 (define (current-state rule) (list-ref rule 0))
 (define (read-symbol rule) (list-ref rule 1))
-(define (new-state rule) (list-ref rule 3))
+(define (next-state rule) (list-ref rule 3))
 (define (write-symbol rule) (list-ref rule 4))
 (define (move-direction rule) (list-ref rule 5))
 
@@ -17,7 +17,7 @@
                   (string-split str))))
     (list (current-state lst)
           (read-symbol lst)
-          (new-state lst)
+          (next-state lst)
           (write-symbol lst)
           (move-direction lst))))
 
