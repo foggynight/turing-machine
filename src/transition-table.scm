@@ -12,7 +12,9 @@
 
 ;; Parse a transition rule from a string.
 (define (parse-transition-rule str)
-  (let ((lst (string-split str)))
+  (let ((lst (map (lambda (e)
+                    (string-ref e 0))
+                  (string-split str))))
     (list (current-state lst)
           (read-symbol lst)
           (new-state lst)
