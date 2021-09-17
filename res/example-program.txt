@@ -1,0 +1,6 @@
+; Determine if a binary number written in big-endian is even.
+0 0 -> 0 0 R
+0 1 -> 0 1 R
+0 _ -> 1 _ L
+1 0 -> A 0 R
+1 1 -> R 1 R
