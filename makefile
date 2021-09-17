@@ -1,10 +1,18 @@
+define compile
+	csc -o turing-machine src/*.scm || rm src/*.c
+endef
+
+define remove
+	rm turing-machine
+endef
+
 all:
-	csc -o turing-machine src/*
+	$(call compile)
 
 remove:
-	rm turing-machine
+	$(call remove)
 
 test:
-	csc -o turing-machine src/*
+	$(call compile)
 	./turing-machine res/example-program.txt
-	rm turing-machine
+	$(call remove)
