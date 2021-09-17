@@ -1,4 +1,4 @@
-(declare (uses transition-table))
+(declare (uses transition))
 
 (import (chicken process-context))
 

@@ -1,4 +1,4 @@
-(declare (unit transition-table))
+(declare (unit transition))
 
 (import (chicken io)
         (chicken string))
