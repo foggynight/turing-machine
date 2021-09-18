@@ -1,6 +1,8 @@
 (declare (unit tape)
          (uses head))
 
+(import vector-lib)
+
 ;; Character used to represent a blank cell on a tape.
 (define blank #\_)
 
@@ -13,7 +15,7 @@
          (head (make-head 0)))
     (let loop ((i 0))
       (when (< i str-len)
-        (tape-write! tape head (string-ref str i))
+        (set! tape (tape-write tape head (string-ref str i)))
         (set! head (move-head head 'right))
         (loop (+ i 1))))
     tape))
@@ -58,16 +60,23 @@
             (loop (move-head h 'left))
             h))))
 
-;; TODO Handle reading and writing out of bounds of the tape by checking against
-;; the bounds when reading, and expanding the tape as needed when writing.
-
 ;; Read a character from the cell at position head in tape.
 (define (tape-read tape head)
-  (tape-ref tape (head->index head)))
+  (if (or (< head (tape-min-head tape))
+          (> head (tape-max-head tape)))
+      blank
+      (tape-ref tape (head->index head))))
 
-;; Write a character to the cell at position head in tape.
-(define (tape-write! tape head char)
-  (set! (tape-ref tape (head->index head)) char))
+;; Write a character to the cell at position head in tape and return tape, this
+;; function may extend tape, thus its return value should be set to the variable
+;; which contains tape.
+(define (tape-write tape head char)
+  (if (or (< head (tape-min-head tape))
+          (> head (tape-max-head tape)))
+      (tape-write (vector-append tape (make-vector (vector-length tape) blank))
+                  head char)
+      (begin (set! (tape-ref tape (head->index head)) char)
+             tape)))
 
 ;; Display a tape, omitting any leading and trailing blank cells.
 (define (display-tape tape)
