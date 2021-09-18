@@ -1,21 +1,17 @@
-(declare (unit head)
-         (uses tape))
+(declare (unit head))
 
-(define (move-left head)
-  (- head 1))
+;; Make a new head equal to start, start should be an integer.
+(define (make-head start)
+  start)
 
-(define (move-right head)
-  (+ head 1))
+;; Move head in the given direction by adding or subtracting one from it.
+(define (move-head head direction)
+  (case direction
+    ('left (- head 1))
+    ('right (+ head 1))))
 
+;; Convert head into an index suitable for indexing a tape.
 (define (head->index head)
   (if (negative? head)
-      (- (* (abs head) 2) 1)
-      (* head 2)))
-
-;; Read a character from a tape at the location of a head.
-(define (head-read head tape)
-  (tape-ref tape (head->index head)))
-
-;; Write a character to a tape at the location of a head.
-(define (head-write head tape)
-  (tape-ref tape (head->index head)))
+      (- (* 2 (abs head)) 1)
+      (* 2 head)))
