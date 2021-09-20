@@ -12,8 +12,6 @@
 
 ;; Parse a transition rule from a string.
 (define (parse-transition-rule str)
-  (define (current-state rule) (list-ref rule 0))
-  (define (read-symbol rule) (list-ref rule 1))
   (define (next-state rule) (list-ref rule 3))
   (define (write-symbol rule) (list-ref rule 4))
   (define (move-direction rule) (list-ref rule 5))
