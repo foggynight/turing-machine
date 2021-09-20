@@ -1,7 +1,8 @@
 (declare (unit tape)
          (uses head))
 
-(import vector-lib)
+;(import vector-lib)
+(import (srfi 133))
 
 ;; Character used to represent a blank cell on a tape.
 (define blank #\_)
@@ -73,8 +74,10 @@
 (define (tape-write tape head char)
   (if (or (< head (tape-min-head tape))
           (> head (tape-max-head tape)))
-      (tape-write (vector-append tape (make-vector (vector-length tape) blank))
-                  head char)
+      (let* ((old-len (tape-length tape))
+             (new-len (if (zero? old-len) 1 old-len)))
+        (tape-write (vector-append tape (make-vector new-len blank))
+                    head char))
       (begin (set! (tape-ref tape (head->index head)) char)
              tape)))
 
@@ -83,7 +86,7 @@
   (let ((first-char (tape-first-char tape))
         (last-char (tape-last-char tape)))
     (unless (null? first-char)
-      (let loop ((head first-char))
+      (let loop ((head (make-head first-char)))
         (when (<= head last-char)
           (display (tape-read tape head))
           (loop (move-head head 'right)))))))

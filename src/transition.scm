@@ -6,12 +6,17 @@
 ;; Transition rule accessor functions.
 (define (current-state rule) (list-ref rule 0))
 (define (read-symbol rule) (list-ref rule 1))
-(define (next-state rule) (list-ref rule 3))
-(define (write-symbol rule) (list-ref rule 4))
-(define (move-direction rule) (list-ref rule 5))
+(define (next-state rule) (list-ref rule 2))
+(define (write-symbol rule) (list-ref rule 3))
+(define (move-direction rule) (list-ref rule 4))
 
 ;; Parse a transition rule from a string.
 (define (parse-transition-rule str)
+  (define (current-state rule) (list-ref rule 0))
+  (define (read-symbol rule) (list-ref rule 1))
+  (define (next-state rule) (list-ref rule 3))
+  (define (write-symbol rule) (list-ref rule 4))
+  (define (move-direction rule) (list-ref rule 5))
   (let ((lst (map (lambda (e)
                     (string-ref e 0))
                   (string-split str))))
@@ -34,6 +39,14 @@
             (loop (read-line))))))
     table)
   (reverse (aux path '())))
+
+;; TODO Write function comment
+(define (evaluate-transition table curr-state read-sym)
+  (let ((rule (car table)))
+    (if (and (char=? curr-state (current-state rule))
+             (char=? read-sym (read-symbol rule)))
+        rule
+        (evaluate-transition (cdr table) curr-state read-sym))))
 
 ;; Display a transition table, one transition rule per line.
 (define (display-transition-table table)
