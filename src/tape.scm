@@ -1,7 +1,6 @@
 (declare (unit tape)
          (uses head))
 
-;(import vector-lib)
 (import (srfi 133))
 
 ;; Character used to represent a blank cell on a tape.
