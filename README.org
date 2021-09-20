@@ -15,9 +15,10 @@ A TM is defined by its...
 - Input alphabet: Σ
 - Tape alphabet: Γ
 - Set of states: Q
-- Transition table: δ: Q x Γ x -> Q x Γ x {L, R}
+- Transition table: δ: Q x Γ x -> Q x Γ x {L, R, S}
 
-Where {L, R} represents the direction which the head should move along the tape.
+Where {L, R, S} (left, right, stay) represents the direction which the head
+should move along the tape.
 
 ** Turing Machine Computations
 
