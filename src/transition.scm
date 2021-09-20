@@ -40,7 +40,7 @@
     table)
   (reverse (aux path '())))
 
-;; TODO Write function comment
+;; Evaluate a transition by returning the desired rule in the transition table.
 (define (evaluate-transition table curr-state read-sym)
   (let ((rule (car table)))
     (if (and (char=? curr-state (current-state rule))
