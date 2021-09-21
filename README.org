@@ -6,11 +6,11 @@ Turing machine simulator.
 
 * Turing Machines
 
-I will use the abbreviation TM to refer to Turing machines in this section.
+** TODO What is a Turing Machine?
 
 ** Defining a Turing Machine
 
-A TM is defined by its...
+A Turing machine is defined by its...
 
 - Input alphabet: Σ
 - Tape alphabet: Γ
@@ -24,31 +24,78 @@ should move along the tape.
 
 *** Configurations
 
-TM computations can be viewed as a sequence of configurations, where a
-configuration is a snapshot of the TM's state: it's head position and tape
-content.
+Turing machine computations can be viewed as a sequence of configurations, where
+a configuration is a snapshot of the Turing machine's state, head position, and
+tape content.
 
 *** Programs
 
-TM programs are defined by the TM's transition table. Inputs to the program are
-written on a tape, the tape is fed into the TM, and the transition table
-determines the sequence of configurations which compose the computation.
+Turing machine programs are defined by a transition table. Inputs to the program
+are written on a tape, the tape is fed into the Turing machine, and the
+transition table determines the sequence of configurations which compose the
+computation.
 
 * Instructions
 
+** Installation
+
+Using =install-eggs.sh= and =make= (Linux):
+#+begin_src sh
+./install-eggs.sh
+make
+#+end_src
+
+Installing eggs manually:
+#+begin_src sh
+chicken-install -s srfi-133
+#+end_src
+
+Building without make:
+#+begin_src sh
+csc -o turing-machine src/*
+#+end_src
+
 ** Writing Programs
 
-*** Transition Rule Format
+=turing-machine= programs are written in text files, where each line of the text
+file is used to specify a transition rule in the following format:
 
-#+begin_src
+#+begin_src text
 CURRENT_STATE READ_SYMBOL -> NEXT_STATE WRITE_SYMBOL MOVE_DIRECTION
 #+end_src
 
+- ~CURRENT_STATE~: Character representing the current state
+- ~READ_SYMBOL~: Character read from the tape
+- ~NEXT_STATE~: Character representing the next state
+- ~WRITE_SYMBOL~: Character to write on the tape
+- ~MOVE_DIRECTION~: Character representing the direction to move the head
+
+The initial state is always represented by the ~0~ character, ~A~ and ~R~ are
+used to represent the accept and reject states, which are the only states in
+which the Turing machine will halt, ~_~ is used to represent blank read/write
+symbols, and move directions are specified using ~L~, ~R~, and ~S~ (left, right,
+stay).
+
 ** Running Programs
+
+To run a Turing machine program, pass the name of the text file containing the
+transition table of the program as a command-line argument to =turing-machine=.
+
+i.e. ~./turing-machine res/example-program.txt~
+
+This will start the =turing-machine= REPL, which does the following in a loop:
+- Reads a tape from input
+- Evaluates the program using the tape, that is, it evaluates transition rules
+  until the machine has reached one of the halt states
+- Outputs the resulting halt state and tape
 
 * Dependencies
 
 - Chicken Scheme
+
+** Chicken Eggs
+
+- srfi-133
 
 * License
 
