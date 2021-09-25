@@ -1,5 +1,5 @@
 define compile
-	csc -o turing-machine src/*.scm || rm src/*.c
+	csc -o turing-machine src/engine/*.scm || rm src/engine/*.c
 endef
 
 define execute
