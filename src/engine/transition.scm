@@ -45,9 +45,12 @@
         rule
         (evaluate-transition (cdr table) curr-state read-sym))))
 
-;; Display a transition table, one transition rule per line.
-(define (display-transition-table table)
-  (unless (null? table)
-    (display (car table))
-    (newline)
-    (display-transition-table (cdr table))))
+;; Display the program contained within the file at path.
+(define (display-program path)
+  (with-input-from-file path
+    (lambda ()
+      (let loop ((line (read-line)))
+        (unless (eof-object? line)
+          (display line)
+          (newline)
+          (loop (read-line)))))))
