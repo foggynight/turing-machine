@@ -15,7 +15,7 @@
 
 (define (main path)
   (display-program path)
-  (set! table (parse-transition-table path))
+  (set! table (parse-program path))
   (let repl-loop ((repl-i 0))
     (reset)
     (display repl-i) (display "> ")

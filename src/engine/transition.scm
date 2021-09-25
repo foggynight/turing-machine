@@ -24,8 +24,8 @@
           (write-symbol lst)
           (move-direction lst))))
 
-;; Parse a transition table from a file.
-(define (parse-transition-table path)
+;; Parse the program contained within the file at path.
+(define (parse-program path)
   (define (aux path table)
     (with-input-from-file path
       (lambda ()
