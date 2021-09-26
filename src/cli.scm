@@ -5,10 +5,6 @@
 (import (chicken io)
         (chicken process-context))
 
-(define table)                          ; Transition table
-(define state)                          ; Current state
-(define head)                           ; Read/write head
-
 ;; Parse the program contained within the file at PATH.
 ;; (parse-program string) => list
 (define (parse-program path)
@@ -34,12 +30,13 @@
           (newline)
           (loop (read-line)))))))
 
-;; Reset state and head to their initial values.
-(define (reset)
-  (set! state (make-state #\0))
-  (set! head (make-head 0)))
-
 (define (main path)
+  (define table)                        ; Transition table
+  (define state)                        ; Current state
+  (define head)                         ; Read/write head
+  (define (reset)
+    (set! state (make-state #\0))
+    (set! head (make-head 0)))
   (display-program path)
   (set! table (parse-program path))
   (let repl-loop ((repl-i 0))
