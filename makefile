@@ -1,9 +1,5 @@
-define compile
-	csc -o turing-machine src/engine/*.scm || rm src/engine/*.c
-endef
-
-define execute
-	./turing-machine res/example-program.txt
+define compile-cli
+	csc -o turing-machine -include-path src src/cli.scm || rm src/*.c
 endef
 
 define remove
@@ -11,15 +7,7 @@ define remove
 endef
 
 all:
-	$(call compile)
-
-execute:
-	$(call execute)
+	$(call compile-cli)
 
 remove:
-	$(call remove)
-
-test:
-	$(call compile)
-	bash -c "trap 'make remove' INT ; make execute"
 	$(call remove)

@@ -1,5 +1,6 @@
-(declare (uses tape)
-         (uses transition))
+;;;; cli.scm - Turing machine REPL at the command line
+
+(include "engine.scm")
 
 (import (chicken io)
         (chicken process-context))
@@ -8,9 +9,34 @@
 (define state)                          ; Current state
 (define head)                           ; Read/write head
 
+;; Parse the program contained within the file at PATH.
+;; (parse-program string) => list
+(define (parse-program path)
+  (define (aux path table)
+    (with-input-from-file path
+      (lambda ()
+        (let loop ((line (read-line)))
+          (unless (eof-object? line)
+            (unless (char=? (string-ref line 0) #\;)
+              (set! table (cons (parse-rule line) table)))
+            (loop (read-line))))))
+    table)
+  (reverse (aux path '())))
+
+;; Display the program contained within the file at PATH.
+;; (display-program string) => unspecified
+(define (display-program path)
+  (with-input-from-file path
+    (lambda ()
+      (let loop ((line (read-line)))
+        (unless (eof-object? line)
+          (display line)
+          (newline)
+          (loop (read-line)))))))
+
 ;; Reset state and head to their initial values.
 (define (reset)
-  (set! state #\0)
+  (set! state (make-state #\0))
   (set! head (make-head 0)))
 
 (define (main path)
