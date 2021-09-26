@@ -2,8 +2,20 @@
 
 (include "engine.scm")
 
-(import (chicken io)
+(import (chicken format)
+        (chicken io)
         (chicken process-context))
+
+(define comment-character #\;)
+(define blank-character #\_)
+
+(define accept-character #\A)
+(define reject-character #\R)
+(define error-character #\E)
+
+(define left-character #\L)
+(define right-character #\R)
+(define stay-character #\S)
 
 ;; Parse the program contained within the file at PATH.
 ;; (parse-program string) => list
@@ -13,7 +25,7 @@
       (lambda ()
         (let loop ((line (read-line)))
           (unless (eof-object? line)
-            (unless (char=? (string-ref line 0) #\;)
+            (unless (char=? (string-ref line 0) comment-character)
               (set! table (cons (parse-rule line) table)))
             (loop (read-line))))))
     table)
@@ -30,32 +42,56 @@
           (newline)
           (loop (read-line)))))))
 
+;; Display TAPE, omitting any leading and trailing blank cells.
+;; (display-tape tape) => unspecified
+(define (display-tape tape)
+  (let ((first-char (tape-first-char tape))
+        (last-char (tape-last-char tape)))
+    (unless (null? first-char)
+      (let loop ((head (make-head first-char)))
+        (when (<= head last-char)
+          (display (tape-read tape head))
+          (loop (move-head head 'right)))))))
+
 (define (main path)
-  (define table)                        ; Transition table
-  (define state)                        ; Current state
-  (define head)                         ; Read/write head
+  (define transition-table)
+  (define current-state)
+  (define head)
   (define (reset)
-    (set! state (make-state #\0))
+    (set! current-state (make-state #\0))
     (set! head (make-head 0)))
   (display-program path)
-  (set! table (parse-program path))
+  (set! transition-table (parse-program path))
+  (setup-engine blank-character)
   (let repl-loop ((repl-i 0))
     (reset)
     (display repl-i) (display "> ")
     (let ((tape (make-tape (read-line))))
       (let eval-loop ()
-        (let ((rule (evaluate-transition table state (tape-read tape head))))
-          (set! state (next-state rule))
-          (set! tape (tape-write tape head (write-symbol rule)))
-          (set! head (case (move-direction rule)
-                       ((#\L) (move-head head 'left))
-                       ((#\R) (move-head head 'right))
-                       (else head))))
-        (unless (or (char=? state #\A)
-                    (char=? state #\R))
+        (let* ((read-symbol (tape-read tape head))
+               (rule (evaluate-transition transition-table
+                                          current-state
+                                          read-symbol)))
+          (if (null? rule)
+              (begin (format #t "Error: No rule found for:~%~
+                                 - Current state = ~A~%~
+                                 - Read symbol = ~A~%"
+                             current-state read-symbol)
+                     (set! current-state error-character))
+              (begin (set! current-state (rule-next-state rule))
+                     (set! tape (tape-write tape head (rule-write-symbol rule)))
+                     (set! head (let ((dir (rule-move-direction rule)))
+                                  (cond ((eqv? dir left-character)
+                                         (move-head head 'left))
+                                        ((eqv? dir right-character)
+                                         (move-head head 'right))
+                                        (else head)))))))
+        (unless (or (char=? current-state accept-character)
+                    (char=? current-state reject-character)
+                    (char=? current-state error-character))
           (eval-loop)))
       (display "=> ")
-      (display state)
+      (display current-state)
       (display ", ")
       (display-tape tape)
       (newline)
