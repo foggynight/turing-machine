@@ -39,20 +39,14 @@ computation.
 
 ** Installation
 
-Using =install-eggs.sh= and =make= (Linux):
+Building with =make=:
 #+begin_src sh
-./install-eggs.sh
 make
 #+end_src
 
-Installing eggs manually:
+Building without =make=:
 #+begin_src sh
-chicken-install -s srfi-133
-#+end_src
-
-Building without make:
-#+begin_src sh
-csc -o turing-machine src/*
+csc -o turing-machine -include-path src src/cli.scm
 #+end_src
 
 ** Writing Programs
@@ -92,10 +86,6 @@ This will start the =turing-machine= REPL, which does the following in a loop:
 * Dependencies
 
 - Chicken Scheme
-
-** Chicken Eggs
-
-- srfi-133
 
 * License
 
