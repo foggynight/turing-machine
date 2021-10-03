@@ -1,5 +1,7 @@
 ;;;; cli.scm - Turing machine REPL at the command line
 
+(include "utils/string.scm")
+(include "utils/vector.scm")
 (include "engine.scm")
 
 (import (chicken format)
