@@ -1,48 +1,12 @@
 ;;;; cli.scm - Turing machine REPL at the command line
 
-(include "utils/string.scm")
-(include "utils/vector.scm")
 (include "engine.scm")
+(include "global.scm")
+(include "parser.scm")
 
 (import (chicken format)
         (chicken io)
         (chicken process-context))
-
-(define comment-character #\;)
-(define blank-character #\_)
-
-(define accept-character #\A)
-(define reject-character #\R)
-(define error-character #\E)
-
-(define left-character #\L)
-(define right-character #\R)
-(define stay-character #\S)
-
-;; Parse the program contained within the file at PATH.
-;; (parse-program string) => list
-(define (parse-program path)
-  (define (aux path table)
-    (with-input-from-file path
-      (lambda ()
-        (let loop ((line (read-line)))
-          (unless (eof-object? line)
-            (unless (char=? (string-ref line 0) comment-character)
-              (set! table (cons (parse-rule line) table)))
-            (loop (read-line))))))
-    table)
-  (reverse (aux path '())))
-
-;; Display the program contained within the file at PATH.
-;; (display-program string) => unspecified
-(define (display-program path)
-  (with-input-from-file path
-    (lambda ()
-      (let loop ((line (read-line)))
-        (unless (eof-object? line)
-          (display line)
-          (newline)
-          (loop (read-line)))))))
 
 ;; Display TAPE, omitting any leading and trailing blank cells.
 ;; (display-tape tape) => unspecified
@@ -56,14 +20,19 @@
           (loop (move-head head 'right)))))))
 
 (define (main path)
-  (define transition-table)
+  (define program-string (with-input-from-file path
+                           (lambda ()
+                             (apply string-append
+                                    (map (lambda (e)
+                                           (string-append e (string #\newline)))
+                                         (read-lines))))))
+  (define transition-table (parse-program program-string))
   (define current-state)
   (define head)
   (define (reset)
     (set! current-state (make-state #\0))
     (set! head (make-head 0)))
-  (display-program path)
-  (set! transition-table (parse-program path))
+  (display program-string)
   (setup-engine blank-character)
   (let repl-loop ((repl-i 0))
     (reset)

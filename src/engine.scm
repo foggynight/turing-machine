@@ -1,5 +1,7 @@
 ;;;; engine.scm - Turing machine engine
 
+(include "utils/vector.scm")
+
 ;;; setup ----------------------------------------------------------------------
 
 ;; Character used to represent a blank cell on a tape.
@@ -128,21 +130,6 @@
 (define (rule-next-state rule) (list-ref rule 2))
 (define (rule-write-symbol rule) (list-ref rule 3))
 (define (rule-move-direction rule) (list-ref rule 4))
-
-;; Parse a transition rule from STR.
-;; (parse-rule string) => rule
-(define (parse-rule str)
-  (define (rule-next-state rule) (list-ref rule 3))
-  (define (rule-write-symbol rule) (list-ref rule 4))
-  (define (rule-move-direction rule) (list-ref rule 5))
-  (let ((lst (map (lambda (e)
-                    (string-ref e 0))
-                  (string-split str #\ ))))
-    (list (rule-current-state lst)
-          (rule-read-symbol lst)
-          (rule-next-state lst)
-          (rule-write-symbol lst)
-          (rule-move-direction lst))))
 
 ;; Evaluate a transition by finding and returning the rule in the transition
 ;; table which has a current state of CURR-STATE, and a read symbol of READ-SYM,
