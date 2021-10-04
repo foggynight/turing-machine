@@ -1,4 +1,4 @@
-;;;; vector.scm - Vector utility functions in R5RS
+;;;; vector.scm - Vector utility functions
 
 ;; Set the elements from the range [START, END) in DEST to the elements from the
 ;; range [0, END - START) in SRC.

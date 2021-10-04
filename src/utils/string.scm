@@ -1,4 +1,4 @@
-;;;; string.scm - String utility functions in R5RS
+;;;; string.scm - String utility functions
 
 ;; Split STR on each occurence of DELIM, and return a list containing the
 ;; resultant substrings, omitting any empty strings.
