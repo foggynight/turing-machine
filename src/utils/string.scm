@@ -3,7 +3,7 @@
 ;; Split STR on each occurence of DELIM, and return a list containing the
 ;; resultant substrings, omitting any empty strings.
 ;; (string-split string character) => list
-;; e.g. (string-split " This is  a test. " #\ ) => ("This" "is" "a" "test.")
+;; e.g. (string-split " This is  a test. " #\space) => ("This" "is" "a" "test.")
 (define (string-split str delim)
   (let ((capturing #f)
         (start 0)
@@ -28,3 +28,20 @@
                    (set! str-list (cons (substring str start str-len)
                                         str-list)))
                  (reverse str-list))))))
+
+;; Return the first non-blank character of STR, or null if STR does not contain
+;; any non-blank characters. Blank characters are spaces, tabs, and newlines.
+;; (first-non-blank string) => character | null
+(define (first-non-blank str)
+  (let ((len (string-length str))
+        (char '()))
+    (unless (= len 0)
+      (let loop ((i 0))
+        (unless (or (not (null? char))
+                    (= i len))
+          (let ((c (string-ref str i)))
+            (case c
+              ((#\space #\tab #\newline))
+              (else (set! char c))))
+          (loop (+ i 1)))))
+    char))
