@@ -5,8 +5,7 @@
 (define (make-state str)
   str)
 
-;; Determine if two states are equal, that is, determine if the strings
-;; representing two states are equal.
+;; Determine if two states are equal.
 ;; (state=? state state) => boolean
 (define (state=? state0 state1)
   (string=? state0 state1))
