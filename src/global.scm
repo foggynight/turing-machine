@@ -1,12 +1,12 @@
 ;;;; global.scm - Turing machine global variables
 
 (define comment-character #\;)
-(define blank-character #\_)
+(define blank-character   #\_)
 
-(define accept-character #\A)
-(define reject-character #\R)
-(define error-character #\E)
+(define accept-state "A")
+(define reject-state "R")
+(define error-state  "E")
 
-(define left-character #\L)
+(define left-character  #\L)
 (define right-character #\R)
-(define stay-character #\S)
+(define stay-character  #\S)

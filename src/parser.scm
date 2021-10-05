@@ -3,23 +3,20 @@
 (include "utils/string.scm")
 
 (include "global.scm")
+(include "rule.scm")
 
 ;; Parse a transition rule from STR.
 ;; (parse-rule string) => rule
+;; e.g. (parse-rule "0 0 -> 0 0 R") => ("0" #\0 "0" #\0 #\R)
 (define (parse-rule str)
-  (define (rule-next-state rule) (list-ref rule 3))
-  (define (rule-write-symbol rule) (list-ref rule 4))
-  (define (rule-move-direction rule) (list-ref rule 5))
-  (let ((lst (map (lambda (e)
-                    (string-ref e 0))
-                  (string-split str #\space))))
-    (list (rule-current-state lst)
-          (rule-read-symbol lst)
-          (rule-next-state lst)
-          (rule-write-symbol lst)
-          (rule-move-direction lst))))
+  (let ((split-str (string-split str #\space)))
+    (list (list-ref split-str 0)
+          (string-ref (list-ref split-str 1) 0)
+          (list-ref split-str 3)
+          (string-ref (list-ref split-str 4) 0)
+          (string-ref (list-ref split-str 5) 0))))
 
-;; Parse the program contained within STR.
+;; Parse a program from STR, where a program is a list of transition rules.
 ;; (parse-program string) => list
 (define (parse-program str)
   (define (remove-comment-lines lines)

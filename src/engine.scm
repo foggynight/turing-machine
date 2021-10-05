@@ -2,6 +2,8 @@
 
 (include "utils/vector.scm")
 
+(include "rule.scm")
+
 ;;; setup ----------------------------------------------------------------------
 
 ;; Character used to represent a blank cell on a tape.
@@ -117,29 +119,28 @@
 
 ;;; state ----------------------------------------------------------------------
 
-;; Make a new state which is represented by CHAR.
-;; (make-state character) => state
-(define (make-state char)
-  char)
+;; Make a new state which is represented by STR.
+;; (make-state string) => state
+(define (make-state str)
+  str)
+
+;; Determine if two states are equal, that is, determine if the strings
+;; representing two states are equal.
+;; (state=? state state) => boolean
+(define (state=? state0 state1)
+  (string=? state0 state1))
 
 ;;; transition -----------------------------------------------------------------
-
-;; Transition rule accessor functions.
-(define (rule-current-state rule) (list-ref rule 0))
-(define (rule-read-symbol rule) (list-ref rule 1))
-(define (rule-next-state rule) (list-ref rule 2))
-(define (rule-write-symbol rule) (list-ref rule 3))
-(define (rule-move-direction rule) (list-ref rule 4))
 
 ;; Evaluate a transition by finding and returning the rule in the transition
 ;; table which has a current state of CURR-STATE, and a read symbol of READ-SYM,
 ;; returns null if no rule is found.
-;; (evaluate-transition list character character) => rule | null
+;; (evaluate-transition list string character) => rule | null
 (define (evaluate-transition table current-state read-symbol)
   (if (null? table)
       '()
       (let ((rule (car table)))
-        (if (and (char=? current-state (rule-current-state rule))
+        (if (and (state=? current-state (rule-current-state rule))
                  (char=? read-symbol (rule-read-symbol rule)))
             rule
             (evaluate-transition (cdr table) current-state read-symbol)))))
