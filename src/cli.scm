@@ -53,8 +53,8 @@
                                         read-symbol)))
         (if (null? rule)
             (begin (format #t "Error: No rule found for:~%~
-                                 - Current state = ~A~%~
-                                 - Read symbol = ~A~%"
+                               - Current state = ~A~%~
+                               - Read symbol = ~A~%"
                            current-state read-symbol)
                    (set! current-state error-character))
             (begin (set! current-state (rule-next-state rule))
