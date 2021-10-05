@@ -56,7 +56,7 @@
                                - Current state = ~A~%~
                                - Read symbol = ~A~%"
                            current-state read-symbol)
-                   (set! current-state error-character))
+                   (set! current-state error-state))
             (begin (set! current-state (rule-next-state rule))
                    (set! tape (tape-write tape head (rule-write-symbol rule)))
                    (set! head (let ((dir (rule-move-direction rule)))
