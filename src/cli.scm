@@ -2,8 +2,11 @@
 
 (include "engine.scm")
 (include "global.scm")
+(include "head.scm")
 (include "parser.scm")
 (include "rule.scm")
+(include "state.scm")
+(include "tape.scm")
 
 (import (chicken format)
         (chicken io)
