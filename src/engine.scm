@@ -2,17 +2,8 @@
 
 (include "utils/vector.scm")
 
+(include "global.scm")
 (include "rule.scm")
-
-;;; setup ----------------------------------------------------------------------
-
-;; Character used to represent a blank cell on a tape.
-(define blank-character)
-
-;; Setup the engine by assigning BLANK-CHAR to the blank-character variable.
-;; (setup-engine character) => unspecified
-(define (setup-engine blank-char)
-  (set! blank-character blank-char))
 
 ;;; head -----------------------------------------------------------------------
 

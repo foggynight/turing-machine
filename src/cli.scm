@@ -34,7 +34,6 @@
     (set! current-state (make-state "0"))
     (set! head (make-head 0)))
   (display program-string)
-  (setup-engine blank-character)
   (let repl-loop ((repl-i 0))
     (reset!)
     (display repl-i) (display "> ")
