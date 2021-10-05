@@ -22,12 +22,12 @@
 ;; Parse the program contained within STR.
 ;; (parse-program string) => list
 (define (parse-program str)
-  (define (remove-comments lines)
+  (define (remove-comment-lines lines)
     (if (null? lines)
         '()
         (let ((line (car lines)))
           (if (char=? (first-non-blank line) comment-character)
-              (remove-comments (cdr lines))
-              (cons line (remove-comments (cdr lines)))))))
+              (remove-comment-lines (cdr lines))
+              (cons line (remove-comment-lines (cdr lines)))))))
   (let ((lines (string-split str #\newline)))
-    (map parse-rule (remove-comments lines))))
+    (map parse-rule (remove-comment-lines lines))))
