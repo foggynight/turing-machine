@@ -13,6 +13,20 @@
         (chicken port)
         (chicken process-context))
 
+;; Display the given program, with separators above and below, and the separator
+;; above containing PATH.
+;; (display-program string string) => unspecified
+(define (display-program path program-string)
+  (let* ((path-length (string-length path))
+         (separator-length (- 74 path-length)))
+    (format #t ";;;; ~A ~A~%"
+            path (make-string (if (negative? separator-length)
+                                  0
+                                  separator-length)
+                              #\-)))
+  (display program-string)
+  (format #t ";; ~A~%" (make-string 77 #\-)))
+
 ;; Convert TAPE into its string representation, omitting any leading and
 ;; trailing blank cells.
 ;; (tape->string tape) => string
@@ -68,7 +82,7 @@
       (unless (halt-state? state)
         (eval-loop)))
     tape)
-  (display program-string)
+  (display-program path program-string)
   (let repl-loop ((repl-i 0))
     (reset!)
     (format #t "~A> " repl-i)
