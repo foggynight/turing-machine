@@ -75,7 +75,7 @@ stay).
 To run a Turing machine program, pass the name of the text file containing the
 transition table of the program as a command-line argument to =turing-machine=.
 
-i.e. ~./turing-machine res/example-program.txt~
+i.e. ~./turing-machine programs/example-program.txt~
 
 This will start the =turing-machine= REPL, which does the following in a loop:
 - Reads a tape from input
