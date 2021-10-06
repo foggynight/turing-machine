@@ -47,12 +47,13 @@
   (display (tape->string tape)))
 
 (define (main path)
-  (define program-string (with-input-from-file path
-                           (lambda ()
-                             (apply string-append
-                                    (map (lambda (e)
-                                           (string-append e (string #\newline)))
-                                         (read-lines))))))
+  (define program-string
+    (with-input-from-file path
+      (lambda ()
+        (apply string-append
+               (map (lambda (e)
+                      (string-append e (string #\newline)))
+                    (read-lines))))))
   (define transition-table (parse-program program-string))
   (define head)
   (define state)
