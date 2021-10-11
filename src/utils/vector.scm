@@ -2,7 +2,7 @@
 
 ;; Set the elements from the range [START, END) in DEST to the elements from the
 ;; range [0, END - START) in SRC.
-;; (vector-range-set! vector vector integer integer) => unspecified
+;; (vector-range-set! vector vector integer integer) -> unspecified
 (define (vector-range-set! dest src start end)
   (let loop ((dest-i start)
              (src-i 0))
@@ -11,7 +11,7 @@
       (loop (+ dest-i 1) (+ src-i 1)))))
 
 ;; Create a new vector containing the elements in VECTOR.
-;; (vector-copy vector) => vector
+;; (vector-copy vector) -> vector
 (define (vector-copy vector)
   (let* ((len (vector-length vector))
          (new-vector (make-vector len)))
@@ -19,7 +19,7 @@
     new-vector))
 
 ;; Append VECTORS into a new vector and return that new vector.
-;; (vector-append vector*) => vector
+;; (vector-append vector*) -> vector
 (define (vector-append . vectors)
   (define (compute-length vectors/list)
     (apply + (map vector-length vectors/list)))

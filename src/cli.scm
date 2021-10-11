@@ -15,7 +15,7 @@
 
 ;; Display the given program, with separators above and below, and the separator
 ;; above containing PATH.
-;; (display-program string string) => unspecified
+;; (display-program string string) -> unspecified
 (define (display-program path program-string)
   (let* ((path-length (string-length path))
          (separator-length (- 74 path-length)))
@@ -29,7 +29,7 @@
 
 ;; Convert TAPE into its string representation, omitting any leading and
 ;; trailing blank cells.
-;; (tape->string tape) => string
+;; (tape->string tape) -> string
 (define (tape->string tape)
   (with-output-to-string
     (lambda ()
@@ -42,7 +42,7 @@
               (loop (move-head head 'right)))))))))
 
 ;; Display TAPE, omitting any leading and trailing blank cells.
-;; (display-tape tape) => unspecified
+;; (display-tape tape) -> unspecified
 (define (display-tape tape)
   (display (tape->string tape)))
 
@@ -88,7 +88,7 @@
     (reset!)
     (format #t "~A> " repl-i)
     (let ((output-tape (evaluate! (make-tape (read-line)))))
-      (format #t "=> ~A, ~A~%" state (tape->string output-tape))
+      (format #t "-> ~A, ~A~%" state (tape->string output-tape))
       (repl-loop (+ repl-i 1)))))
 
 (main (car (command-line-arguments)))

@@ -6,7 +6,7 @@
 ;; Evaluate a transition by finding and returning the rule in the transition
 ;; table which has a current state of CURR-STATE, and a read symbol of READ-SYM,
 ;; returns null if no rule is found.
-;; (evaluate-transition list string character) => rule | null
+;; (evaluate-transition list string character) -> rule | null
 (define (evaluate-transition table current-state read-symbol)
   (if (null? table)
       '()
