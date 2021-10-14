@@ -1,4 +1,4 @@
-;;;; tape.scm - Turing machine tape functions
+;;;; tape.scm - Turing machine tape functions.
 
 (include "utils/vector.scm")
 

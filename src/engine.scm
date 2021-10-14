@@ -1,4 +1,4 @@
-;;;; engine.scm - Turing machine engine
+;;;; engine.scm - Turing machine engine.
 
 (include "global.scm")
 (include "rule.scm")

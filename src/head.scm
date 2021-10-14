@@ -1,4 +1,4 @@
-;;;; head.scm - Turing machine head functions
+;;;; head.scm - Turing machine head functions.
 
 ;; Make a new head with position START.
 ;; (make-head integer) -> head

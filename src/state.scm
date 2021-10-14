@@ -1,4 +1,4 @@
-;;;; state.scm - Turing machine state functions
+;;;; state.scm - Turing machine state functions.
 
 ;; Make a new state which is represented by STR.
 ;; (make-state string) -> state

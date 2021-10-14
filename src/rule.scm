@@ -1,4 +1,4 @@
-;;;; rule.scm - Turing machine transition rule functions
+;;;; rule.scm - Turing machine transition rule functions.
 
 ;; TODO Describe rule layout.
 

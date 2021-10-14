@@ -1,4 +1,4 @@
-;;;; parser.scm - Turing machine program parser functions
+;;;; parser.scm - Turing machine program parser functions.
 
 (include "utils/string.scm")
 

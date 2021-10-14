@@ -1,4 +1,4 @@
-;;;; cli.scm - Turing machine REPL at the command line
+;;;; cli.scm - Turing machine REPL at the command line.
 
 (include "engine.scm")
 (include "global.scm")

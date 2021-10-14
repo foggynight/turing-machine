@@ -1,4 +1,4 @@
-;;;; list.scm - List utility functions
+;;;; list.scm - List utility functions.
 
 ;; Copy a list.
 ;; (list-copy list) -> list
