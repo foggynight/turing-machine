@@ -1,7 +1,5 @@
 ;;;; rule.scm - Turing machine transition rule functions.
 
-;; TODO Describe rule layout.
-
 (include "utils/list.scm")
 
 (define (rule-ref rule index)

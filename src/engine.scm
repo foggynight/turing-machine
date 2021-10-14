@@ -5,10 +5,13 @@
 (include "state.scm")
 
 ;; Evaluate a transition by finding and returning the rule in the transition
-;; table which has a current state of CURR-STATE, and a read symbol of READ-SYM,
-;; returns null if no rule is found.
+;; table which has a current state of CURRENT-STATE, and a read symbol of
+;; READ-SYMBOL, returns null if no rule is found.
 ;;
-;; TODO Describe wildcards.
+;; Both the read and write symbols of a rule may be a wildcard. Assuming the
+;; current state of a rule is CURRENT-STATE, if the read symbol is a wildcard,
+;; the rule is selected regardless of READ-SYMBOL, and if the write symbol is a
+;; wildcard, the write symbol is replaced with READ-SYMBOL.
 ;;
 ;; (evaluate-transition list string character) -> rule | null
 (define (evaluate-transition table current-state read-symbol)
