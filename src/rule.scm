@@ -1,6 +1,19 @@
 ;;;; rule.scm - Turing machine transition rule functions
 
-;; TODO Add comment to describe rule layout.
+;; TODO Describe rule layout.
+
+(include "utils/list.scm")
+
+(define (rule-ref rule index)
+  (list-ref rule index))
+
+(define (rule-set! rule index value)
+  (set! (list-ref rule index) value))
+
+;; Copy a rule.
+;; (rule-copy rule) -> rule
+(define (rule-copy rule)
+  (list-copy rule))
 
 ;; Transition rule accessor functions.
 (define (rule-current-state rule) (list-ref rule 0))

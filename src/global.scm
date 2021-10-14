@@ -1,7 +1,9 @@
 ;;;; global.scm - Turing machine global variables
 
 (define comment-character #\;)
-(define blank-character   #\_)
+
+(define blank-character    #\_)
+(define wildcard-character #\*)
 
 (define accept-state "A")
 (define reject-state "R")
