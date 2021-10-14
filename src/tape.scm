@@ -19,16 +19,16 @@
         (loop (+ i 1))))
     tape))
 
-;; Get the total length of TAPE, including blank spaces.
-;; (tape-length tape) -> integer >= 0
-(define (tape-length tape)
-  (vector-length tape))
-
 (define (tape-ref tape index)
   (vector-ref tape index))
 
 (define (tape-set! tape index value)
   (vector-set! tape index value))
+
+;; Get the total length of TAPE, including blank spaces.
+;; (tape-length tape) -> integer >= 0
+(define (tape-length tape)
+  (vector-length tape))
 
 ;; Get the minimum valid head position of TAPE.
 ;; (tape-min-head tape) -> integer
