@@ -2,13 +2,15 @@
 
 (define comment-character #\;)
 
-(define blank-character    #\_)
+(define blank-character #\_)
 (define wildcard-character #\*)
 
+(define initial-state "0")
 (define accept-state "A")
 (define reject-state "R")
-(define error-state  "E")
+(define error-state "E")
+(define extra-halt-states '())
 
-(define left-character  #\L)
+(define left-character #\L)
 (define right-character #\R)
-(define stay-character  #\S)
+(define stay-character #\S)

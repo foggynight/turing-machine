@@ -15,4 +15,5 @@
 (define (halt-state? state)
   (or (state=? state accept-state)
       (state=? state reject-state)
-      (state=? state error-state)))
+      (state=? state error-state)
+      (member state extra-halt-states)))
