@@ -1,4 +1,4 @@
-;; Decrement a positive binary number written in big-endian.
+;; Decrement a binary number written in big-endian.
 
 ; 0: Check if the tape is empty.
 0 _ -> E _ S
