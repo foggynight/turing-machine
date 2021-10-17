@@ -16,5 +16,5 @@
 ;; (head->index head) -> integer >= 0
 (define (head->index head)
   (if (negative? head)
-      (- (* 2 (abs head)) 1)
-      (* 2 head)))
+      (- (* (abs head) 2) 1)
+      (* head 2)))
