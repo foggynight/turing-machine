@@ -3,7 +3,6 @@
 (include "utils/string.scm")
 
 (include "global.scm")
-(include "rule.scm")
 
 ;; Remove comments from LINES, where a comment is a line whose first
 ;; non-whitespace character is a comment character.
