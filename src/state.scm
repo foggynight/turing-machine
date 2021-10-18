@@ -10,7 +10,7 @@
 (define (state=? state0 state1)
   (string=? state0 state1))
 
-;; Determine if STATE is a halt state, that is, accept, reject, or error.
+;; Determine if STATE is a halt state.
 ;; (halt-state? state) -> boolean
 (define (halt-state? state)
   (or (state=? state accept-state)

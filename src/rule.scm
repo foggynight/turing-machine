@@ -8,7 +8,7 @@
 (define (rule-set! rule index value)
   (set! (list-ref rule index) value))
 
-;; Copy a rule.
+;; Get a copy of RULE.
 ;; (rule-copy rule) -> rule
 (define (rule-copy rule)
   (list-copy rule))
