@@ -11,7 +11,7 @@
 (define (make-tape str)
   (let* ((str-len (string-length str))
          (tape (make-vector (* 2 str-len) blank-character))
-         (head (make-head 0)))
+         (head 0))
     (let loop ((i 0))
       (when (< i str-len)
         (set! tape (tape-write tape head (string-ref str i)))
@@ -44,7 +44,7 @@
 ;; there is no non-blank cell found.
 ;; (tape-first-char tape) -> integer | null
 (define (tape-first-char tape)
-  (let loop ((h (make-head (tape-min-head tape))))
+  (let loop ((h (tape-min-head tape)))
     (if (> h (tape-max-head tape))
         '()
         (if (char=? (tape-read tape h) blank-character)
@@ -55,7 +55,7 @@
 ;; there is no non-blank cell found.
 ;; (tape-last-char tape) -> integer | null
 (define (tape-last-char tape)
-  (let loop ((h (make-head (tape-max-head tape))))
+  (let loop ((h (tape-max-head tape)))
     (if (< h (tape-min-head tape))
         '()
         (if (char=? (tape-read tape h) blank-character)

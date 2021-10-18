@@ -1,10 +1,5 @@
 ;;;; head.scm - Turing machine head functions.
 
-;; Make a new head with position START.
-;; (make-head integer) -> head
-(define (make-head start)
-  start)
-
 ;; Move HEAD in the given DIRECTION by adding or subtracting one from it.
 ;; (move-head head symbol) -> head
 (define (move-head head direction)
