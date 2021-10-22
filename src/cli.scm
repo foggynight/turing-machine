@@ -51,7 +51,10 @@
   (let repl-loop ((repl-i 0))
     (engine-reset!)
     (format #t "~A> " repl-i)
-    (let ((output-tape (engine-skip! (make-tape (read-line)))))
+    (let* ((line (read-line))
+           (output-tape (if (eof-object? line)
+                            (begin (newline) (exit))
+                            (engine-skip! (make-tape line)))))
       (format #t "-> ~A, ~A~%" (engine-state) (tape->string output-tape))
       (repl-loop (+ repl-i 1)))))
 
