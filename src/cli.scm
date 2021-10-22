@@ -1,7 +1,6 @@
 ;;;; cli.scm - Turing machine REPL at the command line.
 
 (include "engine.scm")
-(include "global.scm")
 (include "head.scm")
 (include "tape.scm")
 
