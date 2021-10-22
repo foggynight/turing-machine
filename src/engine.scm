@@ -1,8 +1,17 @@
 ;;;; engine.scm - Turing machine engine.
 
 (include "global.scm")
+(include "head.scm")
+(include "parser.scm")
 (include "rule.scm")
 (include "state.scm")
+(include "tape.scm")
+
+(import (chicken format))
+
+(define rules)
+(define state)
+(define head)
 
 ;; Evaluate a transition by finding and returning the rule in the transition
 ;; table which has a current state of CURRENT-STATE, and a read symbol of
@@ -27,3 +36,54 @@
                   rule)
                 rule)
             (evaluate-transition (cdr table) current-state read-symbol)))))
+
+;; TODO Replace this with signalling an error to the interface.
+(define (display-error_no-rule-found read-symbol)
+  (format #t "Error: No rule found for:~%~
+              - Current state = ~A~%~
+              - Read symbol = ~A~%"
+          state read-symbol))
+
+;; Initialize the engine, that is, load the program contained within
+;; PROGRAM-STRING.
+;; (engine-init! string) -> unspecified
+(define (engine-init! program-string)
+  (set! rules (parse-program! program-string)))
+
+;; Reset the engine by setting its state to the value of the INITIAL-STATE
+;; global variable and set the position of its head to zero.
+;; (engine-reset!) -> unspecified
+(define (engine-reset!)
+  (set! state initial-state)
+  (set! head 0))
+
+;; TODO Implement this and use it in ENGINE-SKIP!.
+;;(define (engine-step!)
+;;  )
+
+;; Evaluate the loaded program using the input TAPE, skipping all steps until a
+;; halt state is reached, then return the final TAPE.
+;; (engine-skip! tape) -> tape
+(define (engine-skip! tape)
+  (let eval-loop ()
+    (let* ((read-symbol (tape-read tape head))
+           (rule (evaluate-transition rules state read-symbol)))
+      (if (null? rule)
+          (begin (display-error_no-rule-found read-symbol)
+                 (set! state error-state))
+          (begin (set! tape (tape-write tape head (rule-write-symbol rule)))
+                 (set! head (let ((dir (rule-move-direction rule)))
+                              (cond ((eqv? dir left-character)
+                                     (move-head head 'left))
+                                    ((eqv? dir right-character)
+                                     (move-head head 'right))
+                                    (else head))))
+                 (set! state (rule-next-state rule)))))
+    (unless (halt-state? state)
+      (eval-loop)))
+  tape)
+
+;; Get the state of the engine.
+;; (engine-state) -> state
+(define (engine-state)
+  state)

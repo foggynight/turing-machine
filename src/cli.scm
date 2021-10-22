@@ -3,9 +3,6 @@
 (include "engine.scm")
 (include "global.scm")
 (include "head.scm")
-(include "parser.scm")
-(include "rule.scm")
-(include "state.scm")
 (include "tape.scm")
 
 (import (chicken format)
@@ -41,11 +38,6 @@
               (display (tape-read tape head))
               (loop (move-head head 'right)))))))))
 
-;; Display TAPE, omitting any leading and trailing blank cells.
-;; (display-tape tape) -> unspecified
-(define (display-tape tape)
-  (display (tape->string tape)))
-
 (define (main path)
   (define program-string
     (with-input-from-file path
@@ -54,41 +46,13 @@
                (map (lambda (e)
                       (string-append e (string #\newline)))
                     (read-lines))))))
-  (define transition-table (parse-program! program-string))
-  (define head)
-  (define state)
-  (define (reset!)
-    (set! head 0)
-    (set! state initial-state))
-  (define (evaluate! tape)
-    (let eval-loop ()
-      (let* ((read-symbol (tape-read tape head))
-             (rule (evaluate-transition transition-table
-                                        state
-                                        read-symbol)))
-        (if (null? rule)
-            (begin (format #t "Error: No rule found for:~%~
-                               - Current state = ~A~%~
-                               - Read symbol = ~A~%"
-                           state read-symbol)
-                   (set! state error-state))
-            (begin (set! tape (tape-write tape head (rule-write-symbol rule)))
-                   (set! head (let ((dir (rule-move-direction rule)))
-                                (cond ((eqv? dir left-character)
-                                       (move-head head 'left))
-                                      ((eqv? dir right-character)
-                                       (move-head head 'right))
-                                      (else head))))
-                   (set! state (rule-next-state rule)))))
-      (unless (halt-state? state)
-        (eval-loop)))
-    tape)
   (display-program path program-string)
+  (engine-init! program-string)
   (let repl-loop ((repl-i 0))
-    (reset!)
+    (engine-reset!)
     (format #t "~A> " repl-i)
-    (let ((output-tape (evaluate! (make-tape (read-line)))))
-      (format #t "-> ~A, ~A~%" state (tape->string output-tape))
+    (let ((output-tape (engine-skip! (make-tape (read-line)))))
+      (format #t "-> ~A, ~A~%" (engine-state) (tape->string output-tape))
       (repl-loop (+ repl-i 1)))))
 
 (main (car (command-line-arguments)))
