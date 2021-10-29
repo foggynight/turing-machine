@@ -57,31 +57,31 @@
   (set! state initial-state)
   (set! head 0))
 
-;; TODO Implement this and use it in ENGINE-SKIP!.
-;;(define (engine-step!)
-;;  )
+;; Evaluate a single transition on the input TAPE, and return the updated TAPE.
+;; (engine-step! tape) -> tape
+(define (engine-step! tape)
+  (let* ((read-symbol (tape-read tape head))
+         (rule (evaluate-transition rules state read-symbol)))
+    (if (null? rule)
+        (begin (display-error_no-rule-found read-symbol)
+               (set! state error-state))
+        (begin (set! tape (tape-write tape head (rule-write-symbol rule)))
+               (set! head (let ((dir (rule-move-direction rule)))
+                            (cond ((eqv? dir left-character)
+                                   (move-head head 'left))
+                                  ((eqv? dir right-character)
+                                   (move-head head 'right))
+                                  (else head))))
+               (set! state (rule-next-state rule)))))
+  tape)
 
-;; Evaluate the loaded program using the input TAPE, skipping all steps until a
-;; halt state is reached, then return the final TAPE.
+;; Evaluate transitions using the input TAPE, skipping all steps until a halt
+;; state is reached, then return the final TAPE.
 ;; (engine-skip! tape) -> tape
 (define (engine-skip! tape)
-  (let eval-loop ()
-    (let* ((read-symbol (tape-read tape head))
-           (rule (evaluate-transition rules state read-symbol)))
-      (if (null? rule)
-          (begin (display-error_no-rule-found read-symbol)
-                 (set! state error-state))
-          (begin (set! tape (tape-write tape head (rule-write-symbol rule)))
-                 (set! head (let ((dir (rule-move-direction rule)))
-                              (cond ((eqv? dir left-character)
-                                     (move-head head 'left))
-                                    ((eqv? dir right-character)
-                                     (move-head head 'right))
-                                    (else head))))
-                 (set! state (rule-next-state rule)))))
-    (unless (halt-state? state)
-      (eval-loop)))
-  tape)
+  (if (halt-state? state)
+      tape
+      (engine-skip! (engine-step! tape))))
 
 ;; Get the state of the engine.
 ;; (engine-state) -> state
