@@ -23,10 +23,10 @@
 ;; wildcard, the write symbol is replaced with READ-SYMBOL.
 ;;
 ;; (evaluate-transition list string character) -> rule | null
-(define (evaluate-transition table current-state read-symbol)
-  (if (null? table)
+(define (evaluate-transition rules current-state read-symbol)
+  (if (null? rules)
       '()
-      (let ((rule (car table)))
+      (let ((rule (car rules)))
         (if (and (state=? current-state (rule-current-state rule))
                  (or (char=? read-symbol (rule-read-symbol rule))
                      (char=? wildcard-character (rule-read-symbol rule))))
@@ -35,7 +35,7 @@
                   (rule-set! rule 3 read-symbol)
                   rule)
                 rule)
-            (evaluate-transition (cdr table) current-state read-symbol)))))
+            (evaluate-transition (cdr rules) current-state read-symbol)))))
 
 ;; TODO Replace this with signalling an error to the interface.
 (define (display-error_no-rule-found read-symbol)
