@@ -85,7 +85,7 @@
 ;; Parse a program from STR, where a program is a list of transition rules. Also
 ;; configures the Turing machine using the CONF section of STR, should it
 ;; contain one.
-;; (parse-program string) -> list
+;; (parse-program! string) -> list
 (define (parse-program! str)
   (let ((lines (string-split str #\newline)))
     (map parse-rule (parse-and-remove-conf! (remove-comments lines)))))
