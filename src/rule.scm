@@ -6,7 +6,7 @@
   (list-ref rule index))
 
 (define (rule-set! rule index value)
-  (set! (list-ref rule index) value))
+  (set-car! (list-tail rule index) value))
 
 ;; Get a copy of RULE.
 ;; (rule-copy rule) -> rule

@@ -41,7 +41,7 @@
                     (= i len))
           (let ((c (string-ref str i)))
             (case c
-              ((#\space #\tab #\newline))
+              ((#\space #\tab #\newline) #f)
               (else (set! char c))))
           (loop (+ i 1)))))
     char))
