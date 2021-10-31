@@ -13,7 +13,7 @@
   (if (null? lines)
       '()
       (let ((line (car lines)))
-        (if (char=? (first-non-blank line) comment-character)
+        (if (char=? (first-non-whitespace line) comment-character)
             (remove-comments (cdr lines))
             (cons line (remove-comments (cdr lines)))))))
 
