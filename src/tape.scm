@@ -3,7 +3,8 @@
 (declare (unit tape)
          (uses global))
 
-(import vector-lib)
+(import (chicken port)
+        vector-lib)
 
 ;; Make a new tape filled with the contents of STR, such that the first
 ;; character of STR is at head position zero, and the remaining characters trail
@@ -84,3 +85,17 @@
                     head char))
       (begin (tape-set! tape (head->index head) char)
              tape)))
+
+;; Convert TAPE into its string representation, omitting any leading and
+;; trailing blank cells.
+;; (tape->string tape) -> string
+(define (tape->string tape)
+  (with-output-to-string
+    (lambda ()
+      (let ((first-char (tape-first-char tape))
+            (last-char (tape-last-char tape)))
+        (unless (null? first-char)
+          (let loop ((head first-char))
+            (when (<= head last-char)
+              (display (tape-read tape head))
+              (loop (move-head head 'right)))))))))

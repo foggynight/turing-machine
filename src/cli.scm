@@ -6,7 +6,6 @@
 
 (import (chicken format)
         (chicken io)
-        (chicken port)
         (chicken process-context))
 
 ;; Display the given program, with separators above and below, and the separator
@@ -22,20 +21,6 @@
                               #\-)))
   (display program-string)
   (format #t ";; ~A~%" (make-string 77 #\-)))
-
-;; Convert TAPE into its string representation, omitting any leading and
-;; trailing blank cells.
-;; (tape->string tape) -> string
-(define (tape->string tape)
-  (with-output-to-string
-    (lambda ()
-      (let ((first-char (tape-first-char tape))
-            (last-char (tape-last-char tape)))
-        (unless (null? first-char)
-          (let loop ((head first-char))
-            (when (<= head last-char)
-              (display (tape-read tape head))
-              (loop (move-head head 'right)))))))))
 
 (define (main path)
   (define program-string
