@@ -1,8 +1,9 @@
 ;;;; tape.scm - Turing machine tape functions.
 
-(include "utils/vector.scm")
+(declare (unit tape)
+         (uses global))
 
-(include "global.scm")
+(import vector-lib)
 
 ;; Make a new tape filled with the contents of STR, such that the first
 ;; character of STR is at head position zero, and the remaining characters trail

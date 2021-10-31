@@ -1,8 +1,10 @@
 ;;;; parser.scm - Turing machine program parser functions.
 
-(include "utils/string.scm")
+(declare (unit parser)
+         (uses global)
+         (uses utils))
 
-(include "global.scm")
+(import (chicken string))
 
 ;; Remove comments from LINES, where a comment is a line whose first
 ;; non-whitespace character is a comment character.
@@ -18,7 +20,7 @@
 ;; Parse a CONF directive and configure the Turing machine.
 ;; (parse-conf! string) -> unspecified
 (define (parse-conf! line)
-  (let ((split-str (string-split line #\space)))
+  (let ((split-str (string-split line)))
     (when (< (length split-str) 2)
       (error "parse-conf!: Invalid CONF directive"))
     (cond ((string-ci=? (car split-str) "STATE:INITIAL")
@@ -47,10 +49,10 @@
               i
               (loop (+ i 1) (cdr lines))))))
   (define (conf-begin? line)
-    (let ((split-str (string-split line #\space)))
+    (let ((split-str (string-split line)))
       (string-ci=? line "CONF:BEGIN")))
   (define (conf-end? line)
-    (let ((split-str (string-split line #\space)))
+    (let ((split-str (string-split line)))
       (string-ci=? line "CONF:END")))
   (define (remove-conf start end)
     (define (aux lines i)
@@ -75,7 +77,7 @@
 ;; (parse-rule string) -> rule
 ;; e.g. (parse-rule "0 0 -> 0 0 R") -> ("0" #\0 "0" #\0 #\R)
 (define (parse-rule str)
-  (let ((split-str (string-split str #\space)))
+  (let ((split-str (string-split str)))
     (list (list-ref split-str 0)
           (string-ref (list-ref split-str 1) 0)
           (list-ref split-str 3)
@@ -87,5 +89,5 @@
 ;; contain one.
 ;; (parse-program! string) -> list
 (define (parse-program! str)
-  (let ((lines (string-split str #\newline)))
+  (let ((lines (string-split str (string #\newline))))
     (map parse-rule (parse-and-remove-conf! (remove-comments lines)))))

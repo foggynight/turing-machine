@@ -1,11 +1,12 @@
 ;;;; engine.scm - Turing machine engine.
 
-(include "global.scm")
-(include "head.scm")
-(include "parser.scm")
-(include "rule.scm")
-(include "state.scm")
-(include "tape.scm")
+(declare (unit engine)
+         (uses global)
+         (uses head)
+         (uses parser)
+         (uses rule)
+         (uses state)
+         (uses tape))
 
 (import (chicken format))
 

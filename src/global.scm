@@ -1,8 +1,9 @@
 ;;;; global.scm - Turing machine global variables.
 
-(define comment-character #\;)
+(declare (unit global))
 
 (define blank-character #\_)
+(define comment-character #\;)
 (define wildcard-character #\*)
 
 (define initial-state "0")

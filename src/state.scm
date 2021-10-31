@@ -1,5 +1,7 @@
 ;;;; state.scm - Turing machine state functions.
 
+(declare (unit state))
+
 ;; Determine if two states are equal.
 ;; (state=? state state) -> boolean
 (define (state=? state0 state1)

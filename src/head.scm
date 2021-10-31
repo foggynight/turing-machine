@@ -1,5 +1,7 @@
 ;;;; head.scm - Turing machine head functions.
 
+(declare (unit head))
+
 ;; Move HEAD in the given DIRECTION by adding or subtracting one from it.
 ;; (move-head head symbol) -> head
 (define (move-head head direction)

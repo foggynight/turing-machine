@@ -1,12 +1,14 @@
 ;;;; rule.scm - Turing machine transition rule functions.
 
-(include "utils/list.scm")
+(declare (unit rule))
+
+(import (srfi 1))
 
 (define (rule-ref rule index)
   (list-ref rule index))
 
 (define (rule-set! rule index value)
-  (set-car! (list-tail rule index) value))
+  (set! (list-ref rule index) value))
 
 ;; Get a copy of RULE.
 ;; (rule-copy rule) -> rule

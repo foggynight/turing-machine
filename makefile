@@ -1,5 +1,5 @@
 all:
-	csc -o turing-machine -include-path src src/cli.scm || rm src/*.c
+	csc -o turing-machine src/*.scm
 
 remove:
 	rm turing-machine

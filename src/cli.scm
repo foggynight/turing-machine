@@ -1,8 +1,8 @@
 ;;;; cli.scm - Turing machine REPL at the command line.
 
-(include "engine.scm")
-(include "head.scm")
-(include "tape.scm")
+(declare (uses engine)
+         (uses head)
+         (uses tape))
 
 (import (chicken format)
         (chicken io)
