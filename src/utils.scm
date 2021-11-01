@@ -2,6 +2,8 @@
 
 (declare (unit utils))
 
+;;; list -----------------------------------------------------------------------
+
 ;; Get a sublist obtained by omitting all but the first K elements of LST. It is
 ;; an error for LST to contain less than K elements.
 ;; (list-head list integer) -> list
@@ -16,6 +18,8 @@
 ;; (sublist list integer integer) -> list
 (define (sublist lst start end)
   (list-head (list-tail lst start) (- end start)))
+
+;;; string ---------------------------------------------------------------------
 
 ;; Return the first non-whitespace character of STR, or false if STR does not
 ;; contain any non-whitespace characters.
