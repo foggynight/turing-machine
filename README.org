@@ -85,7 +85,9 @@ This will start the =turing-machine= REPL, which does the following in a loop:
 
 * Dependencies
 
-- Chicken Scheme
+- CHICKEN 5
+  - srfi-1
+  - vector-lib
 
 * License
 
