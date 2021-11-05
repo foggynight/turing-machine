@@ -1,4 +1,4 @@
-;;;; cli.scm - Turing machine REPL at the command line.
+;;;; main.scm - Turing machine simulator at the command line.
 
 (declare (uses engine)
          (uses head)
