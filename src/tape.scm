@@ -72,9 +72,9 @@
       (blank-character)
       (tape-ref tape (head->index head))))
 
-;; Write a character to the cell at position HEAD in TAPE and return TAPE, this
-;; function may extend TAPE, thus its return value should be set to the variable
-;; which contains TAPE.
+;; Write a character to the cell at position HEAD of TAPE and return TAPE. This
+;; function may extend TAPE, thus the variable which contains TAPE should be set
+;; to this function's return value.
 ;; (tape-write tape head character) -> tape
 (define (tape-write tape head char)
   (if (or (< head (tape-min-head tape))
