@@ -2,6 +2,22 @@
 
 (declare (unit utils))
 
+(import (srfi 1))
+
+;;; list -----------------------------------------------------------------------
+
+;; Get a newly allocated list containing the first N elements of LST. It is an
+;; error for N to be less than zero or greater than the length of LST.
+;; (list-head list integer) -> list
+(define (list-head lst n)
+  (if (zero? n)
+      '()
+      (let ((lst (list-copy lst)))
+        (set-cdr! (list-tail lst (- n 1)) '())
+        lst)))
+
+;;; string ---------------------------------------------------------------------
+
 ;; Get the first character of STR, or false if STR is empty.
 ;; (first-character string) -> character | false
 (define (first-character str)
