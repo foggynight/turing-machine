@@ -1,7 +1,5 @@
 ;;;; global.scm - Turing machine global variables.
 
-;; TODO Add CONF directives.
-
 (declare (unit global))
 
 ;;; dynamic - Can be modified by CONF directives. ------------------------------
