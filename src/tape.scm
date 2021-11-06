@@ -12,7 +12,7 @@
 ;; (make-tape string) -> tape
 (define (make-tape str)
   (let* ((str-len (string-length str))
-         (tape (make-vector (* 2 str-len) blank-character))
+         (tape (make-vector (* 2 str-len) (blank-character)))
          (head 0))
     (let loop ((i 0))
       (when (< i str-len)
@@ -49,7 +49,7 @@
   (let loop ((h (tape-min-head tape)))
     (if (> h (tape-max-head tape))
         '()
-        (if (char=? (tape-read tape h) blank-character)
+        (if (char=? (tape-read tape h) (blank-character))
             (loop (move-head h 'right))
             h))))
 
@@ -60,7 +60,7 @@
   (let loop ((h (tape-max-head tape)))
     (if (< h (tape-min-head tape))
         '()
-        (if (char=? (tape-read tape h) blank-character)
+        (if (char=? (tape-read tape h) (blank-character))
             (loop (move-head h 'left))
             h))))
 
@@ -69,7 +69,7 @@
 (define (tape-read tape head)
   (if (or (< head (tape-min-head tape))
           (> head (tape-max-head tape)))
-      blank-character
+      (blank-character)
       (tape-ref tape (head->index head))))
 
 ;; Write a character to the cell at position HEAD in TAPE and return TAPE, this
@@ -81,7 +81,7 @@
           (> head (tape-max-head tape)))
       (let* ((old-len (tape-length tape))
              (new-len (if (zero? old-len) 1 old-len)))
-        (tape-write (vector-append tape (make-vector new-len blank-character))
+        (tape-write (vector-append tape (make-vector new-len (blank-character)))
                     head char))
       (begin (tape-set! tape (head->index head) char)
              tape)))

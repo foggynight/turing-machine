@@ -10,7 +10,7 @@
 ;; Determine if STATE is a halt state.
 ;; (halt-state? state) -> boolean
 (define (halt-state? state)
-  (or (state=? state accept-state)
-      (state=? state reject-state)
-      (state=? state error-state)
-      (member state extra-halt-states)))
+  (or (state=? state (accept-state))
+      (state=? state (reject-state))
+      (state=? state (error-state))
+      (member state (extra-halt-states))))

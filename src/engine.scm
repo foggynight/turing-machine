@@ -30,8 +30,8 @@
       (let ((rule (car rules)))
         (if (and (state=? current-state (rule-current-state rule))
                  (or (char=? read-symbol (rule-read-symbol rule))
-                     (char=? wildcard-character (rule-read-symbol rule))))
-            (if (char=? wildcard-character (rule-write-symbol rule))
+                     (char=? (wildcard-character) (rule-read-symbol rule))))
+            (if (char=? (wildcard-character) (rule-write-symbol rule))
                 (let ((rule (rule-copy rule)))
                   (rule-set! rule 3 read-symbol)
                   rule)
@@ -52,10 +52,10 @@
   (set! rules (parse-program! program-string)))
 
 ;; Reset the engine by setting its state to the value of the INITIAL-STATE
-;; global variable and set the position of its head to zero.
+;; parameter and set the position of its head to zero.
 ;; (engine-reset!) -> unspecified
 (define (engine-reset!)
-  (set! state initial-state)
+  (set! state (initial-state))
   (set! head 0))
 
 ;; Evaluate a single transition on the input TAPE, and return the updated TAPE.
@@ -65,12 +65,12 @@
          (rule (evaluate-transition rules state read-symbol)))
     (if (null? rule)
         (begin (display-error_no-rule-found read-symbol)
-               (set! state error-state))
+               (set! state (error-state)))
         (begin (set! tape (tape-write tape head (rule-write-symbol rule)))
                (set! head (let ((dir (rule-move-direction rule)))
-                            (cond ((eqv? dir left-character)
+                            (cond ((eqv? dir (left-character))
                                    (move-head head 'left))
-                                  ((eqv? dir right-character)
+                                  ((eqv? dir (right-character))
                                    (move-head head 'right))
                                   (else head))))
                (set! state (rule-next-state rule)))))
