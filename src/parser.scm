@@ -73,8 +73,11 @@
                                (member (string-ref e 0) (move-characters)))
                              (list-tail next (+ (tape-count) 1)))))
     (parser-error "Invalid rule: Invalid move character"))
-  (list (cons (car curr) (map first-character (cdr curr)))
-        (cons (car next) (map first-character (cdr next)))))
+  (make-rule (car curr)
+             (map first-character (cdr curr))
+             (car next)
+             (map first-character (list-head (cdr next) (tape-count)))
+             (map first-character (list-tail (cdr next) (tape-count)))))
 
 ;; Parse and return the program contained within STR, where a program is a list
 ;; of transition rules. This function also configures the Turing machine if the

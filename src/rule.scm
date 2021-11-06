@@ -4,20 +4,19 @@
 
 (import (srfi 1))
 
-(define (rule-ref rule index)
-  (list-ref rule index))
+;; Record type representing a transition rule.
+(define-record rule
+  current-state
+  read-symbols
+  next-state
+  write-symbols
+  move-directions)
 
-(define (rule-set! rule index value)
-  (set! (list-ref rule index) value))
-
-;; Get a copy of RULE.
+;; Get a deep copy of a rule.
 ;; (rule-copy rule) -> rule
 (define (rule-copy rule)
-  (list-copy rule))
-
-;; Transition rule accessor functions.
-(define (rule-current-state rule) (rule-ref rule 0))
-(define (rule-read-symbol rule) (rule-ref rule 1))
-(define (rule-next-state rule) (rule-ref rule 2))
-(define (rule-write-symbol rule) (rule-ref rule 3))
-(define (rule-move-direction rule) (rule-ref rule 4))
+  (make-rule (rule-current-state rule)
+             (list-copy (rule-read-symbols rule))
+             (rule-next-state rule)
+             (list-copy (rule-write-symbols rule))
+             (list-copy (rule-move-directions rule))))
