@@ -12,9 +12,8 @@
 (define (list-head lst n)
   (if (zero? n)
       '()
-      (let ((lst (list-copy lst)))
-        (set-cdr! (list-tail lst (- n 1)) '())
-        lst)))
+      (cons (car lst)
+            (list-head (cdr lst) (- n 1)))))
 
 ;;; string ---------------------------------------------------------------------
 
