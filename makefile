@@ -1,10 +1,10 @@
 .PHONY: all
 all:
-	csc -o turing-machine -O2 -d0 src/*.scm
+	csc -o turing-machine -O4 -d0 src/*.scm
 
 .PHONY: static
 static:
-	csc -o turing-machine -O2 -d0 -static src/*.scm && rm src/*.link
+	csc -o turing-machine -O4 -d0 -static src/*.scm && rm src/*.link
 
 .PHONY: debug
 debug:
