@@ -1,7 +1,6 @@
 ;;;; main.scm - Turing machine simulator at the command line.
 
 (declare (uses engine)
-         (uses head)
          (uses tape))
 
 (import (chicken format)
@@ -10,7 +9,7 @@
 
 ;; Display the given program, with separators above and below, and the separator
 ;; above containing PATH.
-;; (display-program string string) -> unspecified
+;; (display-program string string) -> void
 (define (display-program path program-string)
   (let* ((path-length (string-length path))
          (separator-length (- 74 path-length)))
@@ -33,13 +32,16 @@
   (display-program path program-string)
   (engine-init! program-string)
   (let repl-loop ((repl-i 0))
-    (engine-reset!)
     (format #t "~A> " repl-i)
-    (let* ((line (read-line))
-           (output-tape (if (eof-object? line)
-                            (begin (newline) (exit))
-                            (engine-skip! (make-tape line)))))
-      (format #t "-> ~A, ~A~%" (engine-state) (tape->string output-tape))
+    (let ((line (read-line)))
+      (when (eof-object? line)
+        (newline)
+        (exit))
+      (engine-reset! line)
+      (engine-skip!)
+      (format #t "-> ~A, ~A~%"
+              (engine-state)
+              (tape->string (car (engine-tapes))))
       (repl-loop (+ repl-i 1)))))
 
 (main (car (command-line-arguments)))
