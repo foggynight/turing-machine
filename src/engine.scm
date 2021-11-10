@@ -72,13 +72,7 @@
 ;; Move the heads in HEADS in the directions specified by MOVE-DIRECTIONS.
 ;; (move-heads list) -> void
 (define (move-heads move-directions)
-  (define (aux head move-direction)
-    (cond ((char-ci=? move-direction (left-character))
-           (move-head head 'left))
-          ((char-ci=? move-direction (right-character))
-           (move-head head 'right))
-          (else head)))
-  (set! heads (map aux heads move-directions)))
+  (set! heads (map move-head heads move-directions)))
 
 ;; Perform a single step of the evaluation of the program.
 ;; (engine-step!) -> void

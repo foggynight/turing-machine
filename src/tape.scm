@@ -17,7 +17,7 @@
     (let loop ((i 0))
       (when (< i str-len)
         (set! tape (tape-write tape head (string-ref str i)))
-        (set! head (move-head head 'right))
+        (set! head (move-head head (right-character)))
         (loop (+ i 1))))
     tape))
 
@@ -50,7 +50,7 @@
     (if (> h (tape-max-head tape))
         '()
         (if (char=? (tape-read tape h) (blank-character))
-            (loop (move-head h 'right))
+            (loop (move-head h (right-character)))
             h))))
 
 ;; Find the maximum head position of a non-blank cell in TAPE, returns null if
@@ -61,7 +61,7 @@
     (if (< h (tape-min-head tape))
         '()
         (if (char=? (tape-read tape h) (blank-character))
-            (loop (move-head h 'left))
+            (loop (move-head h (left-character)))
             h))))
 
 ;; Read a character from the cell at position HEAD in TAPE.
@@ -98,4 +98,4 @@
           (let loop ((head first-char))
             (when (<= head last-char)
               (display (tape-read tape head))
-              (loop (move-head head 'right)))))))))
+              (loop (move-head head (right-character))))))))))

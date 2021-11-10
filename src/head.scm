@@ -5,9 +5,9 @@
 ;; Move HEAD in the given DIRECTION by adding or subtracting one from it.
 ;; (move-head head symbol) -> head
 (define (move-head head direction)
-  (case direction
-    ((left) (- head 1))
-    ((right) (+ head 1))))
+  (cond ((char=? direction (left-character)) (- head 1))
+        ((char=? direction (right-character)) (+ head 1))
+        (else head)))
 
 ;; Convert HEAD into an index suitable for indexing a tape.
 ;; (head->index head) -> integer >= 0
