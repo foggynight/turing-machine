@@ -1,4 +1,4 @@
-;;;; global.scm - Turing machine global variables.
+;;;; global.scm - Turing machine global parameters.
 
 (declare (unit global))
 
