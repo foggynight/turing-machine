@@ -1,5 +1,3 @@
-;; Contrived example to display usage of CONF directives.
-
 CONF:BEGIN
   STATE:INITIAL START
   STATE:ACCEPT ACC
