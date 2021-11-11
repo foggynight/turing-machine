@@ -37,6 +37,22 @@
   (set! tapes (cons (make-tape input-str)
                     (map make-tape (make-list (- (tape-count) 1) "")))))
 
+;; Replace the wildcards in RULE with READ-SYMBOLS.
+;; (replace-wildcards rule list) -> rule
+(define (replace-wildcards rule read-symbols)
+  (define (replace-wildcard rule-symbol given-symbol)
+    (if (char=? rule-symbol (wildcard-character))
+        given-symbol
+        rule-symbol))
+  (set! rule (rule-copy rule))
+  (rule-read-symbols-set! rule (map replace-wildcard
+                                    (rule-read-symbols rule)
+                                    read-symbols))
+  (rule-write-symbols-set! rule (map replace-wildcard
+                                     (rule-write-symbols rule)
+                                     read-symbols))
+  rule)
+
 ;; Find the rule in RULES with a current state equal to STATE and read symbols
 ;; equal to READ-SYMBOLS, returns false if no rule was found.
 ;; (find-rule list) -> rule | false
@@ -44,7 +60,7 @@
   (let loop ((rules rules))
     (if (null? rules)
         #f
-        (let ((rule (car rules)))
+        (let ((rule (replace-wildcards (car rules) read-symbols)))
           (if (and (state=? state (rule-current-state rule))
                    (equal? read-symbols (rule-read-symbols rule)))
               rule
