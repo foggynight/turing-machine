@@ -4,13 +4,15 @@
 
 ;;; dynamic - Can be modified by CONF directives. ------------------------------
 
+(define comment-character (make-parameter #\;))   ; SYNTAX:COMMENT
+(define separator-string (make-parameter "->"))   ; SYNTAX:SEPARATOR
+
 (define initial-state (make-parameter "0"))       ; STATE:INITIAL
 (define accept-state (make-parameter "A"))        ; STATE:ACCEPT
 (define reject-state (make-parameter "R"))        ; STATE:REJECT
 (define error-state (make-parameter "E"))         ; STATE:ERROR
 (define extra-halt-states (make-parameter '()))   ; STATE:EXTRA-HALTS
 
-(define comment-character (make-parameter #\;))   ; SYNTAX:COMMENT
 (define blank-character (make-parameter #\_))     ; SYNTAX:BLANK
 (define wildcard-character (make-parameter #\*))  ; SYNTAX:WILDCARD
 
