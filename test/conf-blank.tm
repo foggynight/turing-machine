@@ -2,7 +2,7 @@
 ;; be used as a read/write symbol, but it must be a non-whitespace character.
 
 CONF:BEGIN
-  CHAR:BLANK #
+  SYNTAX:BLANK #
 CONF:END
 
 0 # -> R # S

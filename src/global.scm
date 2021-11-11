@@ -10,13 +10,13 @@
 (define error-state (make-parameter "E"))         ; STATE:ERROR
 (define extra-halt-states (make-parameter '()))   ; STATE:EXTRA-HALTS
 
-(define comment-character (make-parameter #\;))   ; CHAR:COMMENT
-(define blank-character (make-parameter #\_))     ; CHAR:BLANK
-(define wildcard-character (make-parameter #\*))  ; CHAR:WILDCARD
+(define comment-character (make-parameter #\;))   ; SYNTAX:COMMENT
+(define blank-character (make-parameter #\_))     ; SYNTAX:BLANK
+(define wildcard-character (make-parameter #\*))  ; SYNTAX:WILDCARD
 
-(define left-character (make-parameter #\L))      ; CHAR:LEFT
-(define right-character (make-parameter #\R))     ; CHAR:RIGHT
-(define stay-character (make-parameter #\S))      ; CHAR:STAY
+(define left-character (make-parameter #\L))      ; SYNTAX:LEFT
+(define right-character (make-parameter #\R))     ; SYNTAX:RIGHT
+(define stay-character (make-parameter #\S))      ; SYNTAX:STAY
 
 (define tape-count (make-parameter #f))           ; TAPE:COUNT
 

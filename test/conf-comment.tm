@@ -1,13 +1,13 @@
 ; This is a comment.
 
 CONF:BEGIN
-  CHAR:COMMENT -
+  SYNTAX:COMMENT -
 CONF:END
 
 - Now this is a comment.
 
 CONF:BEGIN
-  CHAR:COMMENT ;
+  SYNTAX:COMMENT ;
 CONF:END
 
 ; Now this is a comment.
