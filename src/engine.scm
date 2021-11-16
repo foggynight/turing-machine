@@ -11,26 +11,28 @@
 (import (chicken format)
         (srfi 1))
 
+(include "types.scm")
+
 (define rules)
 (define state)
 (define heads)
 (define tapes)
 
 ;; Accessors for engine variables, to be used in the CLI.
-(define (engine-state) state)
-(define (engine-heads) heads)
-(define (engine-tapes) tapes)
+(: engine-state (--> state)) (define (engine-state) state)
+(: engine-heads (--> list)) (define (engine-heads) heads)
+(: engine-tapes (--> list)) (define (engine-tapes) tapes)
 
 ;; Initialize the engine, that is, load the program contained within
 ;; PROGRAM-STRING.
-;; (engine-init! string) -> void
+(: engine-init! (string -> void))
 (define (engine-init! program-string)
   (set! rules (parse-program! program-string)))
 
 ;; Reset the engine by setting its state to the value of the INITIAL-STATE
 ;; parameter, set the positions of its heads to zero, and set its first tape to
 ;; the tape representation of INPUT-STR.
-;; (engine-reset! string) -> void
+(: engine-reset! (string -> void))
 (define (engine-reset! input-str)
   (set! state (initial-state))
   (set! heads (make-list (tape-count) 0))
@@ -38,7 +40,7 @@
                     (map make-tape (make-list (- (tape-count) 1) "")))))
 
 ;; Replace the wildcards in RULE with READ-SYMBOLS.
-;; (replace-wildcards rule list) -> rule
+(: replace-wildcards (rule list --> rule))
 (define (replace-wildcards rule read-symbols)
   (define (replace-wildcard rule-symbol given-symbol)
     (if (char=? rule-symbol (wildcard-character))
@@ -55,7 +57,7 @@
 
 ;; Find the rule in RULES with a current state equal to STATE and read symbols
 ;; equal to READ-SYMBOLS, returns false if no rule was found.
-;; (find-rule list) -> rule | false
+(: find-rule (list --> (or rule false)))
 (define (find-rule read-symbols)
   (let loop ((rules rules))
     (if (null? rules)
@@ -67,7 +69,7 @@
               (loop (cdr rules)))))))
 
 ;; Display a "no rule found" error.
-;; (display-error_no-rule-found list) -> void
+(: display-error_no-rule-found (list -> void))
 (define (display-error_no-rule-found read-symbols)
   (if (= (length read-symbols) 1)
       (format #t "Error: No rule found for:~%~
@@ -81,29 +83,29 @@
 
 ;; Write the characters in WRITE-SYMBOLS to the tapes in TAPES at the positions
 ;; of the heads in HEADS.
-;; (write-tapes list) -> void
-(define (write-tapes write-symbols)
+(: write-tapes! (list -> void))
+(define (write-tapes! write-symbols)
   (set! tapes (map tape-write tapes heads write-symbols)))
 
 ;; Move the heads in HEADS in the directions specified by MOVE-DIRECTIONS.
-;; (move-heads list) -> void
-(define (move-heads move-directions)
+(: move-head! (list -> void))
+(define (move-heads! move-directions)
   (set! heads (map move-head heads move-directions)))
 
 ;; Perform a single step of the evaluation of the program.
-;; (engine-step!) -> void
+(: engine-step! (-> void))
 (define (engine-step!)
   (let* ((read-symbols (map tape-read tapes heads))
          (rule (find-rule read-symbols)))
     (if rule
-        (begin (write-tapes (rule-write-symbols rule))
-               (move-heads (rule-move-directions rule))
+        (begin (write-tapes! (rule-write-symbols rule))
+               (move-heads! (rule-move-directions rule))
                (set! state (rule-next-state rule)))
         (begin (display-error_no-rule-found read-symbols)
                (set! state (error-state))))))
 
 ;; Perform the entire evaluation of the program.
-;; (engine-skip!) -> void
+(: engine-skip! (-> void))
 (define (engine-skip!)
   (engine-step!)
   (unless (halt-state? state)
