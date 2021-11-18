@@ -106,9 +106,7 @@
   (define config (car configs))
   (set! configs (cdr configs))
   (let* ((state (config-state config))
-         (read-symbols (map tape-read
-                            (config-tapes config)
-                            (config-heads config)))
+         (read-symbols (config-read-tapes config))
          (rule (find-rule state read-symbols)))
     (if rule
         (begin (write-tapes! config (rule-write-symbols rule))
