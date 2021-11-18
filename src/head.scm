@@ -2,17 +2,15 @@
 
 (declare (unit head))
 
-(include "types.scm")
-
 ;; Move HEAD in the given DIRECTION by adding or subtracting one from it.
-(: move-head (head char --> head))
+;; (move-head head symbol) -> head
 (define (move-head head direction)
   (cond ((char=? direction (left-character)) (- head 1))
         ((char=? direction (right-character)) (+ head 1))
         (else head)))
 
 ;; Convert HEAD into an index suitable for indexing a tape.
-(: head->index (head --> number))
+;; (head->index head) -> integer >= 0
 (define (head->index head)
   (if (negative? head)
       (- (* (abs head) 2) 1)

@@ -6,18 +6,16 @@
 
 (import (chicken string))
 
-(include "types.scm")
-
 ;; Number of the current line being parsed, first line is number one.
 (define line-number 0)
 
 ;; Signal an error with a message containing LINE-NUMBER and MSG.
-(: parser-error (string -> void))
+;; (parser-error string) -> void
 (define (parser-error msg)
   (error (string-append "Line " (number->string line-number) ": " msg)))
 
 ;; Parse a CONF directive and configure the Turing machine.
-(: parse-conf! (string -> void))
+;; (parse-conf! string) -> void
 (define (parse-conf! line)
   (define (update-move-characters)
     (move-characters (list (left-character)
@@ -58,7 +56,7 @@
         (else (parser-error "Invalid CONF directive"))))
 
 ;; Get the number of tapes used in the rule represented by CURR and NEXT.
-(: get-tape-count (list list --> number))
+;; (get-tape-count list list) -> integer >= 0
 (define (get-tape-count curr next)
   (define (get-read-count)
     (- (length curr) 1))
@@ -72,7 +70,7 @@
 ;; Parse and return the transition rule contained within CURR and NEXT, check if
 ;; the rule uses the right number of tapes, check if the move characters used in
 ;; the rule are valid, and set the value of TAPE-COUNT if necessary.
-(: parse-rule! (list list -> rule))
+;; (parse-rule! list list) -> rule
 (define (parse-rule! curr next)
   (define (validate-read/write-string str)
     (= (string-length str) 1))
@@ -93,7 +91,7 @@
 ;; Parse and return the program contained within STR, where a program is a list
 ;; of transition rules. This function also configures the Turing machine if the
 ;; program contains a CONF section.
-(: parse-program! (string -> list))
+;; (parse-program! string) -> list
 (define (parse-program! str)
   (define (line-comment? line)
     (char=? (first-non-whitespace line) (comment-character)))

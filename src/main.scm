@@ -9,7 +9,7 @@
 
 ;; Display the given program, with separators above and below, and the separator
 ;; above containing PATH.
-(: display-program (string string -> void))
+;; (display-program string string) -> void
 (define (display-program path program-string)
   (let* ((path-length (string-length path))
          (separator-length (- 74 path-length)))
@@ -21,7 +21,6 @@
   (display program-string)
   (format #t ";; ~A~%" (make-string 77 #\-)))
 
-(: main (string -> void))
 (define (main path)
   (define program-string
     (with-input-from-file path

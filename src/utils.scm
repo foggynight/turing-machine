@@ -8,7 +8,7 @@
 
 ;; Get a newly allocated list containing the first N elements of LST. It is an
 ;; error for N to be less than zero or greater than the length of LST.
-(: list-head (list number --> list))
+;; (list-head list integer) -> list
 (define (list-head lst n)
   (if (zero? n)
       '()
@@ -18,7 +18,7 @@
 ;;; string ---------------------------------------------------------------------
 
 ;; Get the first character of STR, or false if STR is empty.
-(: first-character (string --> (or char false)))
+;; (first-character string) -> character | false
 (define (first-character str)
   (if (= (string-length str) 0)
       #f
@@ -26,7 +26,7 @@
 
 ;; Get the first non-whitespace character of STR, or false if STR does not
 ;; contain any non-whitespace characters.
-(: first-non-whitespace (string --> (or char false)))
+;; (first-non-whitespace string) -> character | false
 (define (first-non-whitespace str)
   (let ((len (string-length str))
         (char #f))

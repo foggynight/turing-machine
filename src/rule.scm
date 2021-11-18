@@ -4,8 +4,6 @@
 
 (import (srfi 1))
 
-(include "types.scm")
-
 ;; Record type representing a transition rule.
 (define-record rule
   current-state
@@ -15,7 +13,7 @@
   move-directions)
 
 ;; Get a deep copy of a rule.
-(: rule-copy (rule --> rule))
+;; (rule-copy rule) -> rule
 (define (rule-copy rule)
   (make-rule (rule-current-state rule)
              (list-copy (rule-read-symbols rule))
