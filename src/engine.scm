@@ -1,6 +1,7 @@
 ;;;; engine.scm - Turing machine engine.
 
 (declare (unit engine)
+         (uses config)
          (uses global)
          (uses head)
          (uses parser)
@@ -12,14 +13,13 @@
         (srfi 1))
 
 (define rules)
-(define state)
-(define heads)
-(define tapes)
+(define configs)
+(define final-state)
+(define final-tapes)
 
-;; Accessors for engine variables, to be used in the CLI.
-(define (engine-state) state)
-(define (engine-heads) heads)
-(define (engine-tapes) tapes)
+(define (engine-configs) configs)
+(define (engine-final-state) final-state)
+(define (engine-final-tapes) final-tapes)
 
 ;; Initialize the engine, that is, load the program contained within
 ;; PROGRAM-STRING.
@@ -27,15 +27,16 @@
 (define (engine-init! program-string)
   (set! rules (parse-program! program-string)))
 
-;; Reset the engine by setting its state to the value of the INITIAL-STATE
-;; parameter, set the positions of its heads to zero, and set its first tape to
-;; the tape representation of INPUT-STR.
+;; Reset the engine by setting CONFIGS to a list containing only the initial
+;; configuration of the Turing machine.
 ;; (engine-reset! string) -> void
 (define (engine-reset! input-str)
-  (set! state (initial-state))
-  (set! heads (make-list (tape-count) 0))
-  (set! tapes (cons (make-tape input-str)
-                    (map make-tape (make-list (- (tape-count) 1) "")))))
+  (set! configs
+    (list (make-config (initial-state)
+                       (make-list (tape-count) 0)
+                       (cons (make-tape input-str)
+                             (map make-tape
+                                  (make-list (- (tape-count) 1) "")))))))
 
 ;; Replace the wildcards in RULE with READ-SYMBOLS.
 ;; (replace-wildcards rule list) -> rule
@@ -55,8 +56,8 @@
 
 ;; Find the rule in RULES with a current state equal to STATE and read symbols
 ;; equal to READ-SYMBOLS, returns false if no rule was found.
-;; (find-rule list) -> rule | false
-(define (find-rule read-symbols)
+;; (find-rule state list) -> rule | false
+(define (find-rule state read-symbols)
   (let loop ((rules rules))
     (if (null? rules)
         #f
@@ -67,44 +68,61 @@
               (loop (cdr rules)))))))
 
 ;; Display a "no rule found" error.
-;; (display-error_no-rule-found list) -> void
-(define (display-error_no-rule-found read-symbols)
+;; (display-error_no-rule-found config list) -> void
+(define (display-error_no-rule-found config read-symbols)
   (if (= (length read-symbols) 1)
       (format #t "Error: No rule found for:~%~
                   - Current state = ~A~%~
                   - Read symbol = ~A~%"
-              state (car read-symbols))
+              (config-state config)
+              (car read-symbols))
       (format #t "Error: No rule found for:~%~
                   - Current state = ~A~%~
                   - Read symbols = ~A~%"
-              state read-symbols)))
+              (config-state config)
+              read-symbols)))
 
-;; Write the characters in WRITE-SYMBOLS to the tapes in TAPES at the positions
-;; of the heads in HEADS.
-;; (write-tapes list) -> void
-(define (write-tapes write-symbols)
-  (set! tapes (map tape-write tapes heads write-symbols)))
+;; Write the characters in WRITE-SYMBOLS to the tapes in CONFIG at the positions
+;; of the heads in CONFIG.
+;; (write-tapes config list) -> void
+(define (write-tapes config write-symbols)
+  (config-tapes-set! config (map tape-write
+                                 (config-tapes config)
+                                 (config-heads config)
+                                 write-symbols)))
 
-;; Move the heads in HEADS in the directions specified by MOVE-DIRECTIONS.
-;; (move-heads list) -> void
-(define (move-heads move-directions)
-  (set! heads (map move-head heads move-directions)))
+;; Move the heads in CONFIG in the directions specified by MOVE-DIRECTIONS.
+;; (move-heads config list) -> void
+(define (move-heads config move-directions)
+  (config-heads-set! config (map move-head
+                                 (config-heads config)
+                                 move-directions)))
 
-;; Perform a single step of the evaluation of the program.
+;; Perform a single step of the evaluation of the program. It is an error for
+;; this function to be called when CONFIGS is empty.
 ;; (engine-step!) -> void
 (define (engine-step!)
-  (let* ((read-symbols (map tape-read tapes heads))
-         (rule (find-rule read-symbols)))
+  (define config (car configs))
+  (set! configs (cdr configs))
+  (let* ((state (config-state config))
+         (read-symbols (map tape-read
+                            (config-tapes config)
+                            (config-heads config)))
+         (rule (find-rule state read-symbols)))
     (if rule
-        (begin (write-tapes (rule-write-symbols rule))
-               (move-heads (rule-move-directions rule))
-               (set! state (rule-next-state rule)))
-        (begin (display-error_no-rule-found read-symbols)
-               (set! state (error-state))))))
+        (begin (write-tapes config (rule-write-symbols rule))
+               (move-heads config (rule-move-directions rule))
+               (config-state-set! config (rule-next-state rule)))
+        (begin (display-error_no-rule-found config read-symbols)
+               (config-state-set! config (error-state)))))
+  (if (halt-state? (config-state config))
+      (begin (set! final-state (config-state config))
+             (set! final-tapes (config-tapes config)))
+      (set! configs (cons config configs))))
 
 ;; Perform the entire evaluation of the program.
 ;; (engine-skip!) -> void
 (define (engine-skip!)
   (engine-step!)
-  (unless (halt-state? state)
+  (unless (null? configs)
     (engine-skip!)))

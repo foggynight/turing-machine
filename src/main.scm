@@ -29,7 +29,7 @@
   (engine-reset! line)
   (engine-skip!)
   (format #t "-> ~A, ~A~%"
-          (engine-state)
+          (engine-final-state)
           (tape->string (car (engine-tapes)))))
 
 ;; Evaluate inputs in a REPL.
@@ -43,8 +43,8 @@
     (engine-reset! line)
     (engine-skip!)
     (format #t "-> ~A, ~A~%"
-            (engine-state)
-            (tape->string (car (engine-tapes))))
+            (engine-final-state)
+            (tape->string (car (engine-final-tapes))))
     (tm-repl (+ i 1))))
 
 (define (main mode path)
