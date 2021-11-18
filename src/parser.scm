@@ -53,6 +53,9 @@
          (update-move-characters))
         ((string-ci=? (car split) "TAPE:COUNT")
          (tape-count (string->number (cadr split))))
+        ((string-ci=? (car split) "MODE:DETERMINISTIC")
+         (deterministic (not (or (string-ci=? (cadr split) "F")
+                                 (string-ci=? (cadr split) "FALSE")))))
         (else (parser-error "Invalid CONF directive"))))
 
 ;; Get the number of tapes used in the rule represented by CURR and NEXT.
