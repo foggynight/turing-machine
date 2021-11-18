@@ -38,7 +38,8 @@
                              (map make-tape
                                   (make-list (- (tape-count) 1) "")))))))
 
-;; Replace the wildcards in RULE with READ-SYMBOLS.
+;; Get a new rule containing the elements of RULE, with any wildcards in the
+;; read/write symbols of RULE replaced with READ-SYMBOLS.
 ;; (replace-wildcards rule list) -> rule
 (define (replace-wildcards rule read-symbols)
   (define (replace-wildcard rule-symbol given-symbol)
@@ -84,16 +85,16 @@
 
 ;; Write the characters in WRITE-SYMBOLS to the tapes in CONFIG at the positions
 ;; of the heads in CONFIG.
-;; (write-tapes config list) -> void
-(define (write-tapes config write-symbols)
+;; (write-tapes! config list) -> void
+(define (write-tapes! config write-symbols)
   (config-tapes-set! config (map tape-write
                                  (config-tapes config)
                                  (config-heads config)
                                  write-symbols)))
 
 ;; Move the heads in CONFIG in the directions specified by MOVE-DIRECTIONS.
-;; (move-heads config list) -> void
-(define (move-heads config move-directions)
+;; (move-heads! config list) -> void
+(define (move-heads! config move-directions)
   (config-heads-set! config (map move-head
                                  (config-heads config)
                                  move-directions)))
@@ -110,8 +111,8 @@
                             (config-heads config)))
          (rule (find-rule state read-symbols)))
     (if rule
-        (begin (write-tapes config (rule-write-symbols rule))
-               (move-heads config (rule-move-directions rule))
+        (begin (write-tapes! config (rule-write-symbols rule))
+               (move-heads! config (rule-move-directions rule))
                (config-state-set! config (rule-next-state rule)))
         (begin (display-error_no-rule-found config read-symbols)
                (config-state-set! config (error-state)))))
