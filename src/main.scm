@@ -30,7 +30,7 @@
   (engine-skip!)
   (format #t "-> ~A, ~A~%"
           (engine-final-state)
-          (tape->string (car (engine-tapes)))))
+          (tape->string (car (engine-final-tapes)))))
 
 ;; Evaluate inputs in a REPL.
 ;; (tm-repl) -> void
