@@ -66,4 +66,4 @@
   (if (or (eq? mode 'eval)
           (eq? mode 'repl))
       (main mode (cadr args))
-      (format #t "Error: Invalid MODE: ~A" mode)))
+      (format #t "Error: Invalid MODE: ~A~%" mode)))
