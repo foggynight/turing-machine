@@ -1,4 +1,4 @@
-;;;; utils.scm - Various utility functions.
+;;;; utils.scm - Various utility procedures.
 
 (declare (unit utils))
 

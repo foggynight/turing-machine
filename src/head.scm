@@ -1,4 +1,4 @@
-;;;; head.scm - Turing machine head functions.
+;;;; head.scm - Turing machine head procedures.
 
 (declare (unit head))
 

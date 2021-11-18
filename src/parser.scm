@@ -89,7 +89,7 @@
              (map first-character (list-tail (cdr next) (tape-count)))))
 
 ;; Parse and return the program contained within STR, where a program is a list
-;; of transition rules. This function also configures the Turing machine if the
+;; of transition rules. This procedure also configures the Turing machine if the
 ;; program contains a CONF section.
 ;; (parse-program! string) -> list
 (define (parse-program! str)

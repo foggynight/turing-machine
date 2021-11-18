@@ -1,4 +1,4 @@
-;;;; state.scm - Turing machine state functions.
+;;;; state.scm - Turing machine state procedures.
 
 (declare (unit state))
 

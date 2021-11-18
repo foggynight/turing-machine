@@ -1,4 +1,4 @@
-;;;; rule.scm - Turing machine transition rule functions.
+;;;; rule.scm - Turing machine transition rule procedures.
 
 (declare (unit rule))
 

@@ -1,4 +1,4 @@
-;;;; tape.scm - Turing machine tape functions.
+;;;; tape.scm - Turing machine tape procedures.
 
 (declare (unit tape)
          (uses global))
@@ -73,8 +73,8 @@
       (tape-ref tape (head->index head))))
 
 ;; Write a character to the cell at position HEAD of TAPE and return TAPE. This
-;; function may extend TAPE, thus the variable which contains TAPE should be set
-;; to this function's return value.
+;; procedure may extend TAPE, thus the variable which contains TAPE should be
+;; set to this procedure's return value.
 ;; (tape-write tape head character) -> tape
 (define (tape-write tape head char)
   (if (or (< head (tape-min-head tape))
