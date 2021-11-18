@@ -6,8 +6,8 @@
 
 ;;; list -----------------------------------------------------------------------
 
-;; Get a newly allocated list containing the first N elements of LST. It is an
-;; error for N to be less than zero or greater than the length of LST.
+;; Get a new list containing the first N elements of LST. N must be inside the
+;; range [0, L] where L is the length of LST.
 ;; (list-head list integer) -> list
 (define (list-head lst n)
   (if (zero? n)
@@ -15,8 +15,9 @@
       (cons (car lst)
             (list-head (cdr lst) (- n 1)))))
 
-;; Insert ELEM into LST before the element at INDEX of LST. It is an error for
-;; INDEX to be outside the range [0, L] where L is the length of LST.
+;; Get a new list containing the elements of LST with ELEM inserted before the
+;; element at INDEX of LST. INDEX must be inside the range [0, L] where L is the
+;; length of LST.
 ;; (list-insert-before list number any) -> list
 (define (list-insert-before lst index elem)
   (if (zero? index)
@@ -24,8 +25,9 @@
       (cons (car lst)
             (list-insert-before (cdr lst) (- index 1) elem))))
 
-;; Insert ELEM into LST after the element at INDEX of LST. It is an error for
-;; INDEX to be outside the range [-1, L) where L is the length of LST.
+;; Get a new list containing the elements of LST with ELEM inserted after the
+;; element at INDEX of LST. INDEX must be inside the range [-1, L) where L is
+;; the length of LST.
 ;; (list-insert-after list number any) -> list
 (define (list-insert-after lst index elem)
   (list-insert-before lst (+ index 1) elem))
