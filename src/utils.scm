@@ -15,6 +15,21 @@
       (cons (car lst)
             (list-head (cdr lst) (- n 1)))))
 
+;; Insert ELEM into LST before the element at INDEX of LST. It is an error for
+;; INDEX to be outside the range [0, L] where L is the length of LST.
+;; (list-insert-before list number any) -> list
+(define (list-insert-before lst index elem)
+  (if (zero? index)
+      (cons elem lst)
+      (cons (car lst)
+            (list-insert-before (cdr lst) (- index 1) elem))))
+
+;; Insert ELEM into LST after the element at INDEX of LST. It is an error for
+;; INDEX to be outside the range [-1, L) where L is the length of LST.
+;; (list-insert-after list number any) -> list
+(define (list-insert-after lst index elem)
+  (list-insert-before lst (+ index 1) elem))
+
 ;;; string ---------------------------------------------------------------------
 
 ;; Get the first character of STR, or false if STR is empty.
