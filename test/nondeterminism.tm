@@ -1,0 +1,9 @@
+CONF:BEGIN
+  MODE:DETERMINISTIC FALSE
+CONF:END
+
+0 _ -> 1 0 S
+0 _ -> 1 1 S
+
+1 0 -> A 0 S
+1 1 -> R 1 S
