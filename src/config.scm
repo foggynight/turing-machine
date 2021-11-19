@@ -11,7 +11,9 @@
 ;; Get a deep copy of a config.
 ;; (config-copy config) -> config
 (define (config-copy config)
-  (make-config state (list-copy heads) (list-copy tapes)))
+  (make-config (config-state config)
+               (list-copy (config-heads config))
+               (list-copy (config-tapes config))))
 
 ;; Get a list of the symbols read from the tapes of CONFIG at the positions of
 ;; the heads of CONFIG.
