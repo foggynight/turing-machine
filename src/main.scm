@@ -21,6 +21,8 @@
   (display program-string)
   (format #t ";; ~A~%" (make-string 77 #\-)))
 
+;; TODO Use TM-EVAL in TM-REPL.
+
 ;; Evaluate a single input.
 ;; (tm-eval) -> void
 (define (tm-eval)
@@ -29,8 +31,8 @@
   (engine-reset! line)
   (engine-skip!)
   (format #t "-> ~A, ~A~%"
-          (engine-final-state)
-          (tape->string (car (engine-final-tapes)))))
+          (config-state (car (engine-configs)))
+          (tape->string (car (config-tapes (car (engine-configs)))))))
 
 ;; Evaluate inputs in a REPL.
 ;; (tm-repl) -> void
@@ -40,12 +42,12 @@
     (when (eof-object? line)
       (newline)
       (exit))
-    (engine-reset! line)
-    (engine-skip!)
-    (format #t "-> ~A, ~A~%"
-            (engine-final-state)
-            (tape->string (car (engine-final-tapes))))
-    (tm-repl (+ i 1))))
+    (engine-reset! line))
+  (engine-skip!)
+  (format #t "-> ~A, ~A~%"
+          (config-state (car (engine-configs)))
+          (tape->string (car (config-tapes (car (engine-configs))))))
+  (tm-repl (+ i 1)))
 
 (define (main mode path)
   (define program-string
