@@ -83,8 +83,8 @@
               (loop (cdr rules)))))))
 
 ;; Get a list of the rules in RULES with a current state equal to the state of
-;; CONFIG and read symbols equal to the read symbols of CONFIG, does not replace
-;; any wildcards in the rule with the read symbols of CONFIG.
+;; CONFIG and read symbols equal to the read symbols of CONFIG, replaces any
+;; wildcards in the rule with the read symbols of CONFIG.
 ;; (find-rules config) -> list
 (define (find-rules config)
   (define state (config-state config))
@@ -92,7 +92,7 @@
   (let loop ((rules rules))
     (if (null? rules)
         '()
-        (let ((rule (car rules)))
+        (let ((rule (replace-wildcards (car rules) read-symbols)))
           (if (and (state=? state (rule-current-state rule))
                    (equal? read-symbols (rule-read-symbols rule)))
               (cons rule (loop (cdr rules)))
