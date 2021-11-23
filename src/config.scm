@@ -1,6 +1,7 @@
 ;;;; config.scm - Turing machine computation configurations.
 
 (declare (unit config)
+         (uses global)
          (uses tape))
 
 (import (srfi 1))
@@ -14,6 +15,11 @@
   (make-config (config-state config)
                (list-copy (config-heads config))
                (list-copy (config-tapes config))))
+
+;; Set the state of CONFIG to ERROR-STATE.
+;; (config-error! config) -> void
+(define (config-error! config)
+  (config-state-set! config (error-state)))
 
 ;; Get a list of the symbols read from the tapes of CONFIG at the positions of
 ;; the heads of CONFIG.

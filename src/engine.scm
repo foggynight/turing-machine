@@ -98,22 +98,6 @@
               (cons rule (loop (cdr rules)))
               (loop (cdr rules)))))))
 
-;; Display a "no rule found" error.
-;; (display-error_no-rule-found config) -> void
-(define (display-error_no-rule-found config)
-  (define read-symbols (config-read-tapes config))
-  (if (= (length read-symbols) 1)
-      (format #t "Error: No rule found for:~%~
-                  - Current state = ~A~%~
-                  - Read symbol = ~A~%"
-              (config-state config)
-              (car read-symbols))
-      (format #t "Error: No rule found for:~%~
-                  - Current state = ~A~%~
-                  - Read symbols = ~A~%"
-              (config-state config)
-              read-symbols)))
-
 ;; Write the characters in WRITE-SYMBOLS to the tapes in CONFIG at the positions
 ;; of the heads in CONFIG.
 ;; (write-tapes! config list) -> void
@@ -145,15 +129,12 @@
     (let ((rule (find-rule config)))
       (if rule
           (update-config! config rule)
-          ;; TODO Replace this with updated error function.
-          (begin (display-error_no-rule-found config)
-                 (config-state-set! config (error-state))))))
+          (config-error! config))))
   (define (aux-nondeterministic)
     (define config (list-ref configs run-index))
     (let ((rules (find-rules config)))
       (if (null? rules)
-          (begin (display-error_no-rule-found config)
-                 (config-state-set! config (error-state)))
+          (config-error! config)
           (begin (let loop ((r (reverse (cdr rules))))
                    (unless (null? r)
                      (let ((c (config-copy config)))
