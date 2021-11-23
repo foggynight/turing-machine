@@ -40,7 +40,7 @@
   (unless (deterministic)
     (set! run-index 0)))
 
-;; Determine if the engine has completed evaluating the program.
+;; Determine if the evaluation of the program is complete.
 ;; (engine-done?) -> boolean
 (define (engine-done?)
   (if (deterministic)
@@ -114,14 +114,14 @@
                                  (config-heads config)
                                  move-directions)))
 
-;; TODO Write a comment for this procedure.
+;; Write the tapes, move the heads, and set the state of CONFIG based on RULE.
+;; (update-config! config rule) -> void
 (define (update-config! config rule)
   (write-tapes! config (rule-write-symbols rule))
   (move-heads! config (rule-move-directions rule))
   (config-state-set! config (rule-next-state rule)))
 
 ;; Perform a single step of the evaluation of the program.
-;; TODO Expand on the comment above.
 ;; (engine-step!) -> void
 (define (engine-step!)
   (define (aux-deterministic)
