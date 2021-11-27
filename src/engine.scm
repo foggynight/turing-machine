@@ -7,17 +7,13 @@
          (uses parser)
          (uses rule)
          (uses state)
-         (uses tape))
+         (uses tape)
+         (uses utils))
 
-(import (chicken format)
-        (srfi 1))
+(import (srfi 1))
 
-(define rules)
-(define configs)
-
-;; Index of the next CONFIG to run within CONFIGS, this is only used in
-;; nondeterministic mode.
-(define run-index)
+(define rules)   ; List of transition rules representing a program.
+(define configs) ; Tree of configurations representing a computation.
 
 (define (engine-configs) configs)
 
@@ -27,27 +23,52 @@
 (define (engine-init! program-string)
   (set! rules (parse-program! program-string)))
 
-;; Reset the engine by setting CONFIGS to a list containing only the initial
+;; Reset the engine by setting CONFIGS to a tree containing only the initial
 ;; configuration of the Turing machine.
 ;; (engine-reset! string) -> void
 (define (engine-reset! input-str)
   (set! configs
-    (list (make-config (initial-state)
-                       (make-list (tape-count) 0)
-                       (cons (make-tape input-str)
-                             (map make-tape
-                                  (make-list (- (tape-count) 1) ""))))))
-  (unless (deterministic)
-    (set! run-index 0)))
+    (make-tree (make-config (initial-state)
+                            (make-list (tape-count) 0)
+                            (cons (make-tape input-str)
+                                  (map make-tape
+                                       (make-list (- (tape-count) 1) "")))))))
 
-;; Determine if the evaluation of the program is complete.
+;; Determine if the evaluation of the program is complete, that is, are all the
+;; configurations in CONFIGS which do not have any children in a halted state.
 ;; (engine-done?) -> boolean
 (define (engine-done?)
-  (if (deterministic)
-      (halt-state? (config-state (car configs)))
-      (not (member #f (map (lambda (e)
-                             (halt-state? (config-state e)))
-                           configs)))))
+  (define done #t)
+  (define (aux tree)
+    (when done
+      (if (tree-has-children? tree)
+          (let loop ((children (tree-children tree)))
+            (unless (or (not done)
+                        (null? children))
+              (aux (car children))
+              (loop (cdr children))))
+          (unless (halt-state? (config-state (tree-root tree)))
+            (set! done #f)))))
+  (aux configs)
+  done)
+
+;; Get the subtree of CONFIGS whose root is the next configuration to be
+;; evaluated by performing a depth first search and taking the first
+;; configuration which does not have any children and is not in a halted state.
+;; (next-config-tree) -> tree | false
+(define (next-config-tree)
+  (define target #f)
+  (define (aux tree)
+    (if (tree-has-children? tree)
+        (let loop ((children (tree-children tree)))
+          (unless (or target
+                      (null? children))
+            (aux (car children))
+            (loop (cdr children))))
+        (unless (halt-state? (config-state (tree-root tree)))
+          (set! target tree))))
+  (aux configs)
+  target)
 
 ;; Get a new rule containing the elements of RULE, with any wildcards in the
 ;; read/write symbols of RULE replaced with READ-SYMBOLS.
@@ -66,25 +87,15 @@
                                      read-symbols))
   rule)
 
-;; Get the first rule in RULES with a current state equal to the state of CONFIG
-;; and read symbols equal to the read symbols of CONFIG, replaces any wildcards
-;; in the rule with the read symbols of CONFIG.
-;; (find-rule config) -> rule | false
-(define (find-rule config)
-  (define state (config-state config))
-  (define read-symbols (config-read-tapes config))
-  (let loop ((rules rules))
-    (if (null? rules)
-        #f
-        (let ((rule (replace-wildcards (car rules) read-symbols)))
-          (if (and (state=? state (rule-current-state rule))
-                   (equal? read-symbols (rule-read-symbols rule)))
-              rule
-              (loop (cdr rules)))))))
-
-;; Get a list of the rules in RULES with a current state equal to the state of
-;; CONFIG and read symbols equal to the read symbols of CONFIG, replaces any
-;; wildcards in the rule with the read symbols of CONFIG.
+;; Get a list of copies of the rules in RULES with a current state and read
+;; symbols equal to those of CONFIG.
+;;
+;; This procedure replaces any wildcards in the read/write symbols of the copied
+;; rules with the read symbols of CONFIG before checking for a match.
+;;
+;; If the simulator is in deterministic mode, this procedure stops after finding
+;; the first matching rule.
+;;
 ;; (find-rules config) -> list
 (define (find-rules config)
   (define state (config-state config))
@@ -95,7 +106,9 @@
         (let ((rule (replace-wildcards (car rules) read-symbols)))
           (if (and (state=? state (rule-current-state rule))
                    (equal? read-symbols (rule-read-symbols rule)))
-              (cons rule (loop (cdr rules)))
+              (cons rule (if (deterministic)
+                             '()
+                             (loop (cdr rules))))
               (loop (cdr rules)))))))
 
 ;; Write the characters in WRITE-SYMBOLS to the tapes in CONFIG at the positions
@@ -124,30 +137,19 @@
 ;; Perform a single step of the evaluation of the program.
 ;; (engine-step!) -> void
 (define (engine-step!)
-  (define (aux-deterministic)
-    (define config (car configs))
-    (let ((rule (find-rule config)))
-      (if rule
-          (update-config! config rule)
-          (config-error! config))))
-  (define (aux-nondeterministic)
-    (define config (list-ref configs run-index))
-    (let ((rules (find-rules config)))
-      (if (null? rules)
-          (config-error! config)
-          (begin (let loop ((r (reverse (cdr rules))))
-                   (unless (null? r)
-                     (let ((c (config-copy config)))
-                       (update-config! c (car r))
-                       (set! configs
-                         (list-insert-after configs run-index c)))
-                     (loop (cdr r))))
-                 (update-config! config (car rules)))))
-    (when (halt-state? (config-state config))
-      (set! run-index (+ run-index 1))))
-  (if (deterministic)
-      (aux-deterministic)
-      (aux-nondeterministic)))
+  (define tree (next-config-tree))
+  (define config (tree-root tree))
+  (define rules (find-rules config))
+  (if (null? rules)
+      (config-error! config)
+      (if (= (length rules) 1)
+          (update-config! config (car rules))
+          (let loop ((r (reverse rules)))
+            (unless (null? r)
+              (let ((c (config-copy config)))
+                (update-config! c (car r))
+                (tree-cons-child! tree (make-tree c)))
+              (loop (cdr r)))))))
 
 ;; Perform the entire evaluation of the program.
 ;; (engine-skip!) -> void

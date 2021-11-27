@@ -2,8 +2,6 @@
 
 (declare (unit utils))
 
-(import (srfi 1))
-
 ;;; list -----------------------------------------------------------------------
 
 ;; Get a new list containing the first N elements of LST. N must be inside the
@@ -12,25 +10,7 @@
 (define (list-head lst n)
   (if (zero? n)
       '()
-      (cons (car lst)
-            (list-head (cdr lst) (- n 1)))))
-
-;; Get a new list containing the elements of LST with ELEM inserted before the
-;; element at INDEX of LST. INDEX must be inside the range [0, L] where L is the
-;; length of LST.
-;; (list-insert-before list number any) -> list
-(define (list-insert-before lst index elem)
-  (if (zero? index)
-      (cons elem lst)
-      (cons (car lst)
-            (list-insert-before (cdr lst) (- index 1) elem))))
-
-;; Get a new list containing the elements of LST with ELEM inserted after the
-;; element at INDEX of LST. INDEX must be inside the range [-1, L) where L is
-;; the length of LST.
-;; (list-insert-after list number any) -> list
-(define (list-insert-after lst index elem)
-  (list-insert-before lst (+ index 1) elem))
+      (cons (car lst) (list-head (cdr lst) (- n 1)))))
 
 ;;; string ---------------------------------------------------------------------
 
@@ -55,3 +35,47 @@
             (set! char c)))
         (loop (+ i 1))))
     char))
+
+;;; tree -----------------------------------------------------------------------
+
+;; Trees are represented by lists, where the first element of the list is the
+;; root of the tree, and subsequent elements are its children.
+
+;; Make a tree containing ELEMS.
+;; (make-tree any*) -> tree
+(define (make-tree . elems)
+  elems)
+
+;; Determine if ELEM is a tree.
+;; (tree? any) -> boolean
+(define (tree? elem)
+  (list? elem))
+
+;; Determine if TREE has children.
+;; (tree-has-children? tree) -> boolean
+(define (tree-has-children? tree)
+  (not (null? (tree-children tree))))
+
+;; Get the root of TREE.
+;; (tree-root tree) -> any
+(define (tree-root tree)
+  (car tree))
+
+;; Get the children of TREE.
+;; (tree-children tree) -> list
+(define (tree-children tree)
+  (cdr tree))
+
+;; Cons CHILD onto the children of TREE.
+;; (tree-cons-child! tree) -> void
+(define (tree-cons-child! tree child)
+  (set-cdr! tree (cons child (tree-children tree))))
+
+;; Perform a preorder traversal of TREE and return a list containing the visited
+;; elements in the order they were visited.
+;; (tree-preorder tree) -> list
+(define (tree-preorder tree)
+  (if (tree? tree)
+      (cons (tree-root tree)
+            (apply append (map tree-preorder (tree-children tree))))
+      (list tree)))
