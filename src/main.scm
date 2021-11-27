@@ -27,7 +27,6 @@
 ;; (tm-eval) -> void
 (define (tm-eval)
   (define line (read-line))
-  (format #t "~A " line)
   (engine-reset! line)
   (engine-skip!)
   (format #t "-> ~A, ~A~%"
