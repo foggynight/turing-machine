@@ -34,24 +34,6 @@
                                   (map make-tape
                                        (make-list (- (tape-count) 1) "")))))))
 
-;; Determine if the evaluation of the program is complete, that is, are all the
-;; configurations in CONFIGS which do not have any children in a halted state.
-;; (engine-done?) -> boolean
-(define (engine-done?)
-  (define done #t)
-  (define (aux tree)
-    (when done
-      (if (tree-has-children? tree)
-          (let loop ((children (tree-children tree)))
-            (unless (or (not done)
-                        (null? children))
-              (aux (car children))
-              (loop (cdr children))))
-          (unless (halt-state? (config-state (tree-root tree)))
-            (set! done #f)))))
-  (aux configs)
-  done)
-
 ;; Get the subtree of CONFIGS whose root is the next configuration to be
 ;; evaluated by performing a depth first search and taking the first
 ;; configuration which does not have any children and is not in a halted state.
@@ -69,6 +51,12 @@
           (set! target tree))))
   (aux configs)
   target)
+
+;; Determine if the evaluation of the program is complete, that is, are all the
+;; configurations in CONFIGS which do not have any children in a halted state.
+;; (engine-done?) -> boolean
+(define (engine-done?)
+  (not (next-config-tree)))
 
 ;; Get a new rule containing the elements of RULE, with any wildcards in the
 ;; read/write symbols of RULE replaced with READ-SYMBOLS.
