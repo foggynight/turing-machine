@@ -42,24 +42,24 @@
 (define (tape-max-head tape)
   (- (/ (tape-length tape) 2) 1))
 
-;; Find the minimum head position of a non-blank cell in TAPE, returns null if
+;; Find the minimum head position of a non-blank cell in TAPE, returns false if
 ;; there is no non-blank cell found.
-;; (tape-first-char tape) -> integer | null
+;; (tape-first-char tape) -> integer | false
 (define (tape-first-char tape)
   (let loop ((h (tape-min-head tape)))
     (if (> h (tape-max-head tape))
-        '()
+        #f
         (if (char=? (tape-read tape h) (blank-character))
             (loop (move-head h (right-character)))
             h))))
 
-;; Find the maximum head position of a non-blank cell in TAPE, returns null if
+;; Find the maximum head position of a non-blank cell in TAPE, returns false if
 ;; there is no non-blank cell found.
-;; (tape-last-char tape) -> integer | null
+;; (tape-last-char tape) -> integer | false
 (define (tape-last-char tape)
   (let loop ((h (tape-max-head tape)))
     (if (< h (tape-min-head tape))
-        '()
+        #f
         (if (char=? (tape-read tape h) (blank-character))
             (loop (move-head h (left-character)))
             h))))
@@ -94,7 +94,7 @@
     (lambda ()
       (let ((first-char (tape-first-char tape))
             (last-char (tape-last-char tape)))
-        (unless (null? first-char)
+        (when first-char
           (let loop ((head first-char))
             (when (<= head last-char)
               (display (tape-read tape head))
