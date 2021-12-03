@@ -11,13 +11,18 @@
 ;; Evaluate a single input.
 ;; (tm-eval!) -> void
 (define (tm-eval! #!optional (line (read-line)))
+  (define step 1)
   (engine-reset! line)
   (let loop ()
+    (display-step step)
+    (set! step (+ step 1))
     (display-configs (engine-configs))
     (engine-step!)
     (unless (engine-done?)
       (loop)))
-  (display-configs (engine-configs)))
+  (display-step step)
+  (display-configs (engine-configs))
+  (display-results (engine-configs) step))
 
 ;; Evaluate inputs in a REPL.
 ;; (tm-repl!) -> void

@@ -2,6 +2,7 @@
 
 (declare (unit display)
          (uses config)
+         (uses state)
          (uses utils))
 
 (import (chicken format))
@@ -18,7 +19,15 @@
                                   separator-length)
                               #\-)))
   (display program-string)
-  (format #t ";; ~A~%" (make-string 77 #\-)))
+  (format #t ";;; ~A~%" (make-string 76 #\-)))
+
+;; Display the STEP number within a separator.
+;; (display-step integer) -> void
+(define (display-step step)
+  (define len (string-length (number->string step)))
+  (format #t ";;; ~A ~A~%"
+          step
+          (make-string (- 75 len) #\-)))
 
 ;; Display the configuration tree given by CONFIGS.
 ;; (display-configs tree) -> void
@@ -39,3 +48,28 @@
         (walk (cdr children) prefix))))
   (format #t "~A~%" (config->string (tree-root configs)))
   (walk (tree-children configs)))
+
+;; Display the results of an evaluation.
+;; (display-results list integer) -> void
+(define (display-results configs steps)
+  (define (get-halts lst)
+    (if (null? lst)
+        '()
+        (let ((state (config-state (car lst))))
+          (if (halt-state? state)
+              (cons state (get-halts (cdr lst)))
+              (get-halts (cdr lst))))))
+  (define (display-final-configs configs)
+    (define final-configs (map tree-root (tree-leaves configs)))
+    (format #t "~A~%" (config->string (car final-configs)))
+    (for-each (lambda (c) (format #t "       ~A~%" (config->string c)))
+              (cdr final-configs)))
+  (format #t ";;; RESULTS ~A~%~
+              Halts: ~A~%~
+              Steps: ~A~%~
+              Final: "
+          (make-string 68 #\-)
+          (list-unique (get-halts (tree-preorder configs)))
+          steps)
+  (display-final-configs configs)
+  (format #t ";;; ~A~%" (make-string 76 #\-)))

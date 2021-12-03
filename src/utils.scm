@@ -12,6 +12,18 @@
       '()
       (cons (car lst) (list-head (cdr lst) (- n 1)))))
 
+;; Get a new list containing the unique elements of LST.
+;; (list-unique list) -> list
+(define (list-unique lst)
+  (define elems '())
+  (define (aux lst)
+    (unless (null? lst)
+      (unless (member (car lst) elems)
+        (set! elems (cons (car lst) elems)))
+      (aux (cdr lst))))
+  (aux lst)
+  (reverse elems))
+
 ;;; string ---------------------------------------------------------------------
 
 ;; Get the first character of STR, or false if STR is empty.
@@ -79,3 +91,14 @@
       (cons (tree-root tree)
             (apply append (map tree-preorder (tree-children tree))))
       (list tree)))
+
+;; Get a list containing the leaf nodes of TREE.
+;; (tree-leaves tree) -> list
+(define (tree-leaves tree)
+  (define lst '())
+  (define (aux tree)
+    (if (tree-has-children? tree)
+        (for-each aux (tree-children tree))
+        (set! lst (cons tree lst))))
+  (aux tree)
+  (reverse lst))
