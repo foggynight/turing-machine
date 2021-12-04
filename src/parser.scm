@@ -1,6 +1,7 @@
 ;;;; parser.scm - Turing machine program parser.
 
 (declare (unit parser)
+         (uses display)
          (uses global)
          (uses utils))
 
@@ -60,6 +61,9 @@
          (limit-step (string->number (cadr split))))
         ((string-ci=? (car split) "LIMIT:TIME")
          (limit-time (string->number (cadr split))))
+        ((string-ci=? (car split) "TREE:UNICODE")
+         (update-tree-chars! (not (or (string-ci=? (cadr split) "F")
+                                      (string-ci=? (cadr split) "FALSE")))))
         (else (parser-error "Invalid CONF directive"))))
 
 ;; Get the number of tapes used in the rule represented by CURR and NEXT.

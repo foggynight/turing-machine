@@ -7,6 +7,23 @@
 
 (import (chicken format))
 
+(define corner     "+-- ")
+(define empty      "    ")
+(define horizontal "|-- ")
+(define vertical   "|   ")
+
+;; Update the characters used to draw configuration trees based on if the
+;; program is in unicode mode.
+;; (update-tree-chars! boolean) -> void
+(define (update-tree-chars! unicode)
+  (if unicode
+      (begin (set! corner     "└── ")
+             (set! horizontal "├── ")
+             (set! vertical   "│   "))
+      (begin (set! corner     "+-- ")
+             (set! horizontal "|-- ")
+             (set! vertical   "|   "))))
+
 ;; Display the given program, with separators above and below, and the separator
 ;; above containing PATH.
 ;; (display-program string string) -> void
@@ -33,10 +50,6 @@
 ;; Display the configuration tree given by CONFIGS.
 ;; (display-configs tree) -> void
 (define (display-configs configs)
-  (define corner     "+-- ")
-  (define empty      "    ")
-  (define horizontal "|-- ")
-  (define vertical   "|   ")
   (define (walk children #!optional (prefix ""))
     (unless (null? children)
       (let ((child (car children))
