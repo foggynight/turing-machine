@@ -34,29 +34,16 @@
                                   (map make-tape
                                        (make-list (- (tape-count) 1) "")))))))
 
-;; Get the subtree of CONFIGS whose root is the next configuration to be
-;; evaluated by performing a depth first search and taking the first
-;; configuration which does not have any children and is not in a halted state.
-;; (next-config-tree) -> tree | false
-(define (next-config-tree)
-  (define target #f)
-  (define (aux tree)
-    (if (tree-has-children? tree)
-        (let loop ((children (tree-children tree)))
-          (unless (or target
-                      (null? children))
-            (aux (car children))
-            (loop (cdr children))))
-        (unless (halt-state? (config-state (tree-root tree)))
-          (set! target tree))))
-  (aux configs)
-  target)
-
-;; Determine if the evaluation of the program is complete, that is, are all the
-;; configurations in CONFIGS which do not have any children in a halted state.
+;; Determine if the evaluation of the program is complete, that is, are all leaf
+;; configurations in a halted state.
 ;; (engine-done?) -> boolean
 (define (engine-done?)
-  (not (next-config-tree)))
+  (let loop ((leaves (tree-leaves configs)))
+    (if (null? leaves)
+        #t
+        (if (halt-state? (config-state (tree-root (car leaves))))
+            (loop (cdr leaves))
+            #f))))
 
 ;; Get a new rule containing the elements of RULE, with any wildcards in the
 ;; read/write symbols of RULE replaced with READ-SYMBOLS.
@@ -122,22 +109,26 @@
   (move-heads! config (rule-move-directions rule))
   (config-state-set! config (rule-next-state rule)))
 
-;; Perform a single step of the evaluation of the program.
+;; Perform a single step of the evaluation of the program, that is, evaluate a
+;; single transition of all non-halted leaf configurations.
 ;; (engine-step!) -> void
 (define (engine-step!)
-  (define tree (next-config-tree))
-  (define config (tree-root tree))
-  (define rules (find-rules config))
-  (if (null? rules)
-      (config-error! config)
-      (if (= (length rules) 1)
-          (update-config! config (car rules))
-          (let loop ((r (reverse rules)))
-            (unless (null? r)
-              (let ((c (config-copy config)))
-                (update-config! c (car r))
-                (tree-cons-child! tree (make-tree c)))
-              (loop (cdr r)))))))
+  (define (transition tree)
+    (define config (tree-root tree))
+    (define rules (find-rules config))
+    (if (null? rules)
+        (config-error! config)
+        (if (= (length rules) 1)
+            (update-config! config (car rules))
+            (let loop ((r (reverse rules)))
+              (unless (null? r)
+                (let ((c (config-copy config)))
+                  (update-config! c (car r))
+                  (tree-cons-child! tree (make-tree c)))
+                (loop (cdr r)))))))
+  (for-each (lambda (t) (unless (halt-state? (config-state (tree-root t)))
+                          (transition t)))
+            (tree-leaves configs)))
 
 ;; Perform the entire evaluation of the program.
 ;; (engine-skip!) -> void
