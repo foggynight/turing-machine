@@ -24,6 +24,9 @@
 
 (define deterministic (make-parameter #t))        ; MODE:DETERMINISTIC BOOLEAN
 
+(define limit-step (make-parameter 1000))         ; LIMIT:STEP STEPS
+(define limit-time (make-parameter 1000))         ; LIMIT:TIME MILLISECONDS
+
 ;;; static - Can't be modified by CONF directives. -----------------------------
 
 (define move-characters (make-parameter (list (left-character)

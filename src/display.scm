@@ -21,13 +21,14 @@
   (display program-string)
   (format #t ";;; ~A~%" (make-string 76 #\-)))
 
-;; Display the STEP number within a separator.
-;; (display-step integer) -> void
-(define (display-step step)
-  (define len (string-length (number->string step)))
-  (format #t ";;; ~A ~A~%"
-          step
-          (make-string (- 75 len) #\-)))
+;; Display the STEP number and TIME within a separator.
+;; (display-step+time integer integer) -> void
+(define (display-step+time step time)
+  (define step-len (string-length (number->string step)))
+  (define time-len (string-length (number->string time)))
+  (format #t ";;; STEP: ~A TIME: ~A ~A~%"
+          step time
+          (make-string (- 62 step-len time-len) #\-)))
 
 ;; Display the configuration tree given by CONFIGS.
 ;; (display-configs tree) -> void
@@ -51,7 +52,7 @@
 
 ;; Display the results of an evaluation.
 ;; (display-results list integer) -> void
-(define (display-results configs steps)
+(define (display-results configs steps time)
   (define (get-halts lst)
     (if (null? lst)
         '()
@@ -67,9 +68,10 @@
   (format #t ";;; RESULTS ~A~%~
               Halts: ~A~%~
               Steps: ~A~%~
+              Time:  ~A~%~
               Final: "
           (make-string 68 #\-)
           (list-unique (get-halts (tree-preorder configs)))
-          steps)
+          steps time)
   (display-final-configs configs)
   (format #t ";;; ~A~%" (make-string 76 #\-)))

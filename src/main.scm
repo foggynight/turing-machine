@@ -6,26 +6,32 @@
 
 (import (chicken format)
         (chicken io)
-        (chicken process-context))
+        (chicken process-context)
+        (chicken time))
 
 ;; Evaluate a single input.
-;; (tm-eval!) -> void
+;; (tm-eval! string) -> void
 (define (tm-eval! #!optional (line (read-line)))
-  (define step 1)
   (engine-reset! line)
-  (let loop ()
-    (display-step step)
-    (set! step (+ step 1))
-    (display-configs (engine-configs))
-    (engine-step!)
-    (unless (engine-done?)
-      (loop)))
-  (display-step step)
-  (display-configs (engine-configs))
-  (display-results (engine-configs) step))
+  (let ((start-time (current-process-milliseconds)))
+    (let loop ((step 0)  ; Current evaluation step.
+               (time 0)  ; Start time of current step.
+               (last 0)) ; Start time of previous step.
+      (if (or (engine-done?)
+              (if (negative? (limit-step)) #f (> step (limit-step)))
+              (if (negative? (limit-time)) #f (> time (limit-time))))
+          (display-results (engine-configs) (- step 1) last)
+          (begin (unless (zero? step)
+                   (engine-step!))
+                 (display-step+time step time)
+                 (display-configs (engine-configs))
+                 (loop (+ step 1)
+                       (- (current-process-milliseconds)
+                          start-time)
+                       time))))))
 
 ;; Evaluate inputs in a REPL.
-;; (tm-repl!) -> void
+;; (tm-repl! integer) -> void
 (define (tm-repl! #!optional (i 1))
   (format #t "~A> " i)
   (let ((line (read-line)))
