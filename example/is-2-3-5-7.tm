@@ -1,4 +1,4 @@
-;; Non-deterministically determine if a binary number written in big-endian is
+;; Nondeterministically determine if a binary number written in big-endian is
 ;; one of the first four prime numbers: 2, 3, 5, and 7.
 
 CONF:BEGIN
