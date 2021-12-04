@@ -12,6 +12,6 @@
 
 ; 2: Check that both tapes contain the same string.
 2 _ _ -> A _ _ S S
-2 0 1 -> R 0 1 S S
 2 1 0 -> R 1 0 S S
+2 0 1 -> R 0 1 S S
 2 * * -> 2 * * R L
