@@ -7,7 +7,7 @@
 
 (import (chicken format))
 
-(define corner     "+-- ")
+(define corner     "`-- ")
 (define empty      "    ")
 (define horizontal "|-- ")
 (define vertical   "|   ")
@@ -20,7 +20,7 @@
       (begin (set! corner     "└── ")
              (set! horizontal "├── ")
              (set! vertical   "│   "))
-      (begin (set! corner     "+-- ")
+      (begin (set! corner     "`-- ")
              (set! horizontal "|-- ")
              (set! vertical   "|   "))))
 
