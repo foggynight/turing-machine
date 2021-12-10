@@ -1,17 +1,19 @@
 turing-machine
 ==============
-Turing machine simulator at the command line with support for multitape and
+
+Turing machine simulator at the command line, with support for multitape and
 nondeterministic Turing machines.
 
 
 Turing Machines
-~~~~~~~~~~~~~~~
+---------------
+
 A Turing machine is defined by its...
-- Input alphabet: Σ
-- Tape alphabet: Γ = Σ ∪ {⊔}
-- Set of states: Q
-- Transition table: δ = {Q x Γ -> Q x Γ x {L, R, S}}
-Where ⊔ represents the blank symbol, and {L, R, S} (left, right, stay)
+- Input alphabet: `Σ`
+- Tape alphabet: `Γ = Σ ∪ {⊔}`
+- Set of states: `Q`
+- Transition table: `δ = {Q x Γ -> Q x Γ x {L, R, S}}`
+Where `⊔` represents the blank symbol, and `{L, R, S}` (left, right, stay)
 represents the direction which the head should move along the tape.
 
 Turing machines use infinite tape(s) as their input/output and storage medium.
@@ -31,26 +33,27 @@ computation.
 
 
 Installation
-~~~~~~~~~~~~
-The following instructions assume you will be building turing-machine using
+------------
+
+The following instructions assume you will be building `turing-machine` using
 make. To build without make, use the commands contained within the makefile.
 
-To install the required CHICKEN eggs (libraries) and build turing-machine,
+To install the required CHICKEN eggs (libraries) and build `turing-machine`,
 execute the following from the repo directory:
 
     make eggs
     make
 
 This will install the eggs with elevated privileges, and create the
-turing-machine executable in the repo directory.
+`turing-machine` executable in the repo directory.
 
 
 Usage
-~~~~~
+-----
 
-Writing Programs
-----------------
-turing-machine programs are written in text files, where each line of the text
+### Writing Programs
+
+`turing-machine` programs are written in text files, where each line of the text
 file is either empty, a comment, a CONF directive, or a transition rule. Empty
 lines and comments are ignored, CONF directives are used to customize the
 simulator, and transition rules define the program itself.
@@ -65,23 +68,22 @@ must contain the same number of each.
 
 By default, the initial state is 0, and the halt states are A (accept), R
 (reject), and E (error); but these along with much of the syntax used to write
-turing-machine programs can be customized using CONF directives.
+`turing-machine` programs can be customized using CONF directives.
 
-For example programs and to see some of the other features of turing-machine not
-mentioned here, such as the usage of CONF directives, see the example and test
-directories.
+For example programs and to see some of the other features of `turing-machine`
+not mentioned here, such as the usage of CONF directives, see the example and
+test directories.
 
+### Running Programs
 
-Running Programs
-----------------
-To run a turing-machine program, pass the name of the text file containing the
-program as a command line argument to turing-machine, such as:
+To run a `turing-machine` program, pass the name of the text file containing the
+program as a command line argument to `turing-machine`, such as:
 
     ./turing-machine example/binary-palindrome.tm
 
-This will start turing-machine, load the specified program, read a single line
+This will start `turing-machine`, load the specified program, read a single line
 of input which will be written onto the input tape, and perform the computation.
-turing-machine will display the progress of the computation during its
+`turing-machine` will display the progress of the computation during its
 execution, and the results of the computation once it has terminated.
 
 Additionally, there is a REPL mode which fetches inputs in a loop. The desired
@@ -94,19 +96,17 @@ There are two modes: eval and repl, with eval mode being the default.
 
 
 Dependencies
-~~~~~~~~~~~~
+------------
+
 - CHICKEN 5
   - srfi-1
   - vector-lib
 
 
 License
-~~~~~~~
+-------
+
 Copyright (C) 2021 Robert Coffey
 
 This is free software: you can redistribute it and/or modify it under the terms
-of the GNU General Public License version 3 as published by the Free Software
-Foundation.
-
-You should have received a copy of the GNU General Public License version 3
-along with this software. If not, see <https://www.gnu.org/licenses/gpl-3.0>.
+of the GNU General Public License version 3.
