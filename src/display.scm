@@ -78,13 +78,12 @@
     (format #t "~A~%" (config->string (car final-configs)))
     (for-each (lambda (c) (format #t "       ~A~%" (config->string c)))
               (cdr final-configs)))
-  (format #t ";;; RESULTS ~A~%~
-              Halts: ~A~%~
+  (format #t ";;; RESULTS ~A~%" (make-string 68 #\-))
+  (display "Final: ")
+  (display-final-configs configs)
+  (format #t "Halts: ~A~%~
               Steps: ~A~%~
-              Time:  ~A~%~
-              Final: "
-          (make-string 68 #\-)
+              Time:  ~A~%"
           (list-unique (get-halts (tree-preorder configs)))
           steps time)
-  (display-final-configs configs)
   (format #t ";;; ~A~%" (make-string 76 #\-)))
