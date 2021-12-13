@@ -1,8 +1,8 @@
 turing-machine
 ==============
 
-Turing machine simulator at the command line, with support for multitape and
-nondeterministic Turing machines.
+Turing machine simulator with support for multitape and nondeterministic Turing
+machines.
 
 
 Turing Machines
