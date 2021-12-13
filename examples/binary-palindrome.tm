@@ -10,7 +10,7 @@
 1 _ * -> 2 _ * R S
 1 * * -> 1 * * L S
 
-; 2: Check that both tapes contain the same string.
+; 2: Check if the second tape contains the reverse of the first tape.
 2 _ _ -> A _ _ S S
 2 1 0 -> R 1 0 S S
 2 0 1 -> R 0 1 S S
