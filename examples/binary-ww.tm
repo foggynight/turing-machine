@@ -1,7 +1,7 @@
 ;; Decide if a binary string is of the form ww, that is, can the string be split
 ;; into two equal strings, using two tapes.
 
-; 0: Check if input is the empty string.
+; 0: Check if the input is the empty string.
 0 _ * -> A _ * S S
 0 * * -> special * * L S
 
@@ -43,10 +43,9 @@ equal 0 0 -> equal 0 0 R R
 equal 1 1 -> equal 1 1 R R
 equal * * -> restart-left * * L S
 
-; restart-left: Move the first tape's head to its first non-blank cell.
+; restart-left/restart-shift: Shift the special symbol to the right using the
+; special state, thus setting up the next splits of the input to be compared.
 restart-left _ * -> restart-shift _ * R S
 restart-left * * -> restart-left * * L S
-
-; restart-shift: Shift the special symbol to the right.
 restart-shift $ * -> special $ * R S
 restart-shift * * -> restart-shift * * R S

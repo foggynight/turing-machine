@@ -1,4 +1,4 @@
-;; Determine if a binary string is a palindrome using two tapes.
+;; Decide if a binary string is a palindrome using two tapes.
 
 ; 0: Copy input onto second tape.
 0 _ _ -> 1 _ _ L L

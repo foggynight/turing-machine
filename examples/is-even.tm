@@ -1,4 +1,4 @@
-;; Determine if a binary number written in big-endian is even.
+;; Decide if a binary number written in big-endian is even.
 
 ; 0: Move the head to the last non-blank cell of the tape.
 0 _ -> 1 _ L
